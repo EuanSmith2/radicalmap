@@ -3,6 +3,7 @@
 ![RadicalMap Banner](banner.png)
 
 ![Python](https://img.shields.io/badge/Python-3.11+-131510?style=flat-square&logo=python&logoColor=d8d4c6) ![License](https://img.shields.io/badge/License-MIT-131510?style=flat-square&logoColor=d8d4c6) ![Purpose](https://img.shields.io/badge/Purpose-Research_Only-c05038?style=flat-square) ![DSA](https://img.shields.io/badge/EU_DSA-Art._40-1e3a5f?style=flat-square) ![Jurisdiction](https://img.shields.io/badge/Jurisdiction-EU_%2F_Ireland-1e3a5f?style=flat-square)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.22083807.svg)](https://doi.org/10.5281/zenodo.22083807)
 
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
