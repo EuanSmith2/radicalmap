@@ -1,0 +1,23 @@
+# Environment
+venv/
+.env
+*.pyc
+__pycache__/
+.DS_Store
+
+# Database — contains scraped personal data; not for public distribution
+db/radicalmap.db
+
+# Scraped media — video files are copyrighted third-party content
+data/videos/
+
+# Raw comment JSON exports
+data/comments/*.json
+
+# AI analysis output — contains raw scraped content
+data/fable_results.json
+
+# Temporary / session artefacts
+*.log
+*.tmp
+scratchpad/

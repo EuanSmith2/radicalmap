@@ -1,0 +1,351 @@
+{
+  "hashtags": [
+    {
+      "tag": "noticing",
+      "display_name": "#noticing",
+      "category": "antisemitic",
+      "definition": "Coded language used to imply that Jewish people control major institutions (media, finance, government). Users claim to be 'noticing' patterns of Jewish influence. Allows antisemitic content to avoid automated moderation by avoiding explicit slurs.",
+      "origin": "Emerged on 4chan and far-right forums circa 2016–2018. Adopted on TikTok and YouTube as a soft entry point to antisemitic conspiracy theory.",
+      "severity": "high"
+    },
+    {
+      "tag": "esoteric",
+      "display_name": "#esoteric",
+      "category": "conspiracy",
+      "definition": "Umbrella tag for fringe spiritual and conspiratorial beliefs: Hollow Earth, Agartha, Tartaria, ancient civilisations suppressed by elites. Often a gateway to more extreme content — the 'strange but harmless' aesthetic normalises distrust of institutions.",
+      "origin": "New Age and occult communities, accelerated by algorithm-driven rabbit holes post-2020.",
+      "severity": "low"
+    },
+    {
+      "tag": "vrilliant",
+      "display_name": "#vrilliant",
+      "category": "white_nationalist",
+      "definition": "Community identifier for the '#Vrilliant' TikTok subculture — a network of accounts promoting esoteric far-right ideology through aesthetic, philosophical, and artistic content. Draws on the concept of 'Vril', a mystical energy force from 19th century occultist fiction later adopted by Nazi esoteric movements including the Vril Society and Thule Society.",
+      "origin": "Derived from 'Vril', coined in Edward Bulwer-Lytton's 1871 novel 'The Coming Race'. Adopted by German occultist groups in the 1920s–40s with links to the Nazi Party. Revived on TikTok as a community aesthetic circa 2022–2024.",
+      "severity": "high"
+    },
+    {
+      "tag": "vrill",
+      "display_name": "#vrill",
+      "category": "white_nationalist",
+      "definition": "Variant spelling of #vrilliant. Used interchangeably within the same esoteric far-right community on TikTok. References Vril — a mystical life-force energy associated with Nazi occultism and Aryan supremacy ideology.",
+      "origin": "See #vrilliant. Alternate tag used by the same community to avoid moderation.",
+      "severity": "high"
+    },
+    {
+      "tag": "vrilvideo",
+      "display_name": "#vrilvideo",
+      "category": "white_nationalist",
+      "definition": "Content tag used by the Vril/Vrilliant community to label video content within their network. Functions as a directory tag to connect viewers to the broader community of esoteric far-right accounts.",
+      "origin": "Emerged within the #vrilliant TikTok community as a content-type identifier.",
+      "severity": "high"
+    },
+    {
+      "tag": "88",
+      "display_name": "#88",
+      "category": "white_nationalist",
+      "definition": "Numerical neo-Nazi code. H is the 8th letter of the alphabet; '88' therefore stands for 'HH' — Heil Hitler. One of the most widely recognised white supremacist numerical codes, used across platforms to signal neo-Nazi allegiance while evading keyword filters.",
+      "origin": "Neo-Nazi movements, widely used since at least the 1980s. Appears in usernames, bios, captions, and hashtags across all major platforms.",
+      "severity": "high"
+    },
+    {
+      "tag": "hiperborea",
+      "display_name": "#hiperborea",
+      "category": "white_nationalist",
+      "definition": "Alternative spelling of Hyperborea (used in Spanish-speaking and some Eastern European communities). In far-right usage, Hyperborea refers to a mythical Arctic or Nordic homeland of the original Aryan race — a concept central to Nazi esoteric mythology and modern white nationalist identity movements. Content under this tag promotes racial myth as spiritual or historical fact.",
+      "origin": "Greek mythology (land beyond the North Wind). Adopted by early 20th-century occultists and Nazi ideologues including Alfred Rosenberg and Heinrich Himmler as the supposed origin point of the Aryan master race.",
+      "severity": "medium"
+    },
+    {
+      "tag": "agartha",
+      "display_name": "#agartha",
+      "category": "conspiracy",
+      "definition": "A mythical underground civilisation said to exist at the centre of the Earth. In esoteric far-right communities, Agartha is often linked to claims that an advanced Aryan or ancient civilisation retreated underground and continues to influence the surface world. Overlaps with Hollow Earth conspiracy and Nazi occultism.",
+      "origin": "Theosophist literature (Helena Blavatsky, 19th century). Developed in esoteric and occultist circles. Adopted by Nazi mystics and later by online conspiracy communities.",
+      "severity": "low"
+    },
+    {
+      "tag": "based",
+      "display_name": "#based",
+      "category": "radicalisation",
+      "definition": "Originally African-American slang meaning self-assured or unapologetically oneself. Co-opted by online far-right communities to mean 'expressing forbidden or extreme views without shame'. Used as approval/endorsement of extreme content. Severity depends heavily on context — standalone it is low severity, but as applied to far-right content it functions as radicalisation pipeline approval.",
+      "origin": "Popularised by rapper Lil B. Adopted by incel/red-pill communities circa 2017, then absorbed into broader far-right vernacular.",
+      "severity": "medium"
+    },
+    {
+      "tag": "larp",
+      "display_name": "#larp",
+      "category": "radicalisation",
+      "definition": "Live Action Role Play. In far-right contexts, 'larping' refers to performatively adopting medieval European, Viking, or Aryan warrior aesthetics and identity — often as an entry point into nationalist ideology. The aesthetic frames extremist ideology as a heroic historical tradition rather than a political movement.",
+      "origin": "Gaming/cosplay culture. Adopted and subverted by far-right communities on TikTok and YouTube to describe the esoteric nationalism aesthetic.",
+      "severity": "low"
+    },
+    {
+      "tag": "larpmaxxing",
+      "display_name": "#larpmaxxing",
+      "category": "radicalisation",
+      "definition": "Portmanteau of 'larping' and 'maxxing' (taking something to its extreme). Refers to fully committing to the aesthetic of medieval/Aryan warrior identity, often as a form of ideological absorption. The 'maxxing' suffix (borrowed from incel culture) signals serious, committed practice rather than casual interest.",
+      "origin": "Fusion of incel 'maxxing' vocabulary and far-right LARP aesthetics. Emerged on TikTok circa 2022–2023.",
+      "severity": "medium"
+    },
+    {
+      "tag": "hanslanda",
+      "display_name": "#hanslanda",
+      "category": "white_nationalist",
+      "definition": "References Hans Landa, the SS Obersturmbannführer antagonist from Quentin Tarantino's 2009 film Inglourious Basterds. Within far-right online communities, Landa is idolised for his intelligence, ruthlessness, and perceived dominance — his SS rank is treated as aspirational rather than villainous. Content under this tag often glorifies Nazi aesthetics through the lens of film fandom.",
+      "origin": "Inglourious Basterds (2009). Adopted by far-right communities on TikTok and 4chan as an aesthetic symbol of Aryan intellectual superiority.",
+      "severity": "medium"
+    },
+    {
+      "tag": "farright",
+      "display_name": "#farright",
+      "category": "radicalisation",
+      "definition": "Self-applied label used by far-right content creators to identify and organise their content. Unlike most dog whistles, this is explicit self-identification. Functions as a community directory — following or searching this tag leads directly into the far-right content network. Also used by researchers and journalists documenting far-right activity.",
+      "origin": "Self-descriptive political label adopted by the online far-right community.",
+      "severity": "medium"
+    },
+    {
+      "tag": "restore",
+      "display_name": "#restore",
+      "category": "white_nationalist",
+      "definition": "Shorthand for 'restore Western civilisation' or 'restore tradition'. Used in identitarian and nationalist content to advocate for a return to an imagined pre-multicultural Europe. Deliberately vague to avoid moderation while signalling to in-group audiences.",
+      "origin": "Identitarian movement language. Popularised online circa 2015–2020 in parallel with 'Great Replacement' theory content.",
+      "severity": "medium"
+    },
+    {
+      "tag": "thisisengland",
+      "display_name": "#thisisengland",
+      "category": "white_nationalist",
+      "definition": "References Shane Meadows' 2006 British film This Is England, which portrays skinhead and far-right culture in 1980s England. The film is critically acclaimed and anti-fascist in intent, but its aesthetic — skinhead fashion, working-class nationalism, the character Combo — has been appropriated by far-right accounts as a romanticised vision of British white nationalism.",
+      "origin": "Shane Meadows, This Is England (2006). Aesthetic co-opted by British nationalist communities online.",
+      "severity": "medium"
+    },
+    {
+      "tag": "tfibtfiw",
+      "display_name": "#tfibtfiw",
+      "category": "white_nationalist",
+      "definition": "Coded acronym used within the Vrilliant/esoteric far-right community. Exact expansion unclear — likely 'The Fire In the Blood, The Fire In the West' or a similar identitarian phrase. Functions as in-group recognition signal among initiated community members. The opacity is deliberate: it allows community members to identify each other while remaining opaque to moderators and outsiders.",
+      "origin": "Originated within the #vrilliant TikTok community. Specific phrase requires further research.",
+      "severity": "medium"
+    },
+    {
+      "tag": "targetaudience",
+      "display_name": "#targetaudience",
+      "category": "radicalisation",
+      "definition": "Used ironically within the far-right TikTok community to describe content specifically designed to appeal to young men susceptible to radicalisation. The self-aware use of marketing language signals that creators understand they are operating a recruitment pipeline. The irony masks deliberate targeting strategy.",
+      "origin": "Ironic appropriation of digital marketing terminology within the #vrilliant and related TikTok communities.",
+      "severity": "medium"
+    },
+    {
+      "tag": "truther",
+      "display_name": "#truther",
+      "category": "conspiracy",
+      "definition": "Self-applied label for people who believe mainstream narratives (9/11, vaccines, moon landing, COVID) are cover-ups. High overlap with antisemitic content that identifies Jewish elites as the authors of these cover-ups.",
+      "origin": "9/11 Truth movement, later absorbed into broader QAnon-adjacent culture.",
+      "severity": "medium"
+    },
+    {
+      "tag": "npc",
+      "display_name": "#npc",
+      "category": "dehumanisation",
+      "definition": "Short for 'non-player character' (video game term). Used to dismiss people who accept mainstream views as unthinking automatons. Dehumanises political opponents and reinforces in-group superiority.",
+      "origin": "Gaming culture, weaponised by far-right communities circa 2018.",
+      "severity": "medium"
+    },
+    {
+      "tag": "1488",
+      "display_name": "#1488",
+      "category": "white_nationalist",
+      "definition": "'14' = the '14 Words' neo-Nazi slogan ('We must secure the existence of our people and a future for white children'). '88' = HH (Heil Hitler). Explicit neo-Nazi numerical code.",
+      "origin": "Neo-Nazi movements, David Lane (The Order). One of the most widely recognised extremist numerical codes.",
+      "severity": "high"
+    },
+    {
+      "tag": "redpilled",
+      "display_name": "#redpilled",
+      "category": "radicalisation",
+      "definition": "Borrowed from The Matrix. Refers to 'awakening' to suppressed truths. Used across the spectrum from mild scepticism to explicit white nationalism. Acts as a radicalisation pipeline marker.",
+      "origin": "MRA/incel communities circa 2012, adopted by the alt-right 2015–2016.",
+      "severity": "medium"
+    },
+    {
+      "tag": "tartaria",
+      "display_name": "#tartaria",
+      "category": "conspiracy",
+      "definition": "Belief that a technologically advanced civilisation called Tartaria was erased from history. Frequently intersects with antisemitic theories about who controls historical narrative.",
+      "origin": "Russian-language internet forums, spread to English-language TikTok 2020–2021.",
+      "severity": "low"
+    },
+    {
+      "tag": "shmerg",
+      "display_name": "#shmerg",
+      "category": "white_nationalist",
+      "definition": "In-group community tag used within the Vrilliant/esoteric far-right TikTok network. Functions as a community identifier. Exact origin unclear — likely a coined term specific to this subculture. Requires further research.",
+      "origin": "Originated within the #vrilliant TikTok community. Etymology unclear.",
+      "severity": "medium"
+    },
+    {
+      "tag": "goy",
+      "display_name": "#goy",
+      "category": "antisemitic",
+      "definition": "Hebrew and Yiddish term for a non-Jewish person. In everyday use it is a neutral descriptor. In online extremist contexts — particularly accounts promoting antisemitic conspiracy theories — it is used derogatorily to imply that non-Jews are naive, controllable, or inferior. Usernames and captions containing 'goy' in far-right contexts signal explicit antisemitic in-group identity.",
+      "origin": "Biblical Hebrew for 'nation' or 'people'. Entered English via Yiddish. Adopted as a self-applied slur or badge in antisemitic online communities circa 2015–present.",
+      "severity": "high"
+    },
+    {
+      "tag": "goyim",
+      "display_name": "#goyim",
+      "category": "antisemitic",
+      "definition": "Plural form of 'goy'. Used identically to #goy in extremist online contexts — typically to describe non-Jews as a mass of manipulated, unaware people controlled by Jewish elites. Phrases such as 'wake up goyim' or 'the goyim know' are explicit antisemitic dog whistles frequently appearing in captions and comments.",
+      "origin": "Hebrew/Yiddish plural of goy. Weaponised as a derogatory term in online antisemitic communities from approximately 2014 onwards.",
+      "severity": "high"
+    },
+    {
+      "tag": "foid",
+      "display_name": "#foid",
+      "category": "dehumanisation",
+      "definition": "Portmanteau of 'female humanoid'. An incel (involuntary celibate) term used to strip women of their humanity by framing them as sub-human automatons. Part of an extensive incel taxonomy designed to dehumanise women and reinforce misogynistic ideology. Accounts using this term are operating within incel communities that have documented links to real-world violence.",
+      "origin": "Emerged on incel forums (r/Braincels, Incels.co) circa 2018. Spread to TikTok and Twitter as incel communities migrated platforms.",
+      "severity": "high"
+    },
+    {
+      "tag": "femoid",
+      "display_name": "#femoid",
+      "category": "dehumanisation",
+      "definition": "Extended form of #foid — 'female humanoid'. Functionally identical in incel communities. Used interchangeably with 'foid' to dehumanise women. The '-oid' suffix (implying alien or robotic) is a deliberate linguistic device to deny women full humanity.",
+      "origin": "Incel forums, circa 2016–2018. Pre-dates 'foid' as the longer form.",
+      "severity": "high"
+    },
+    {
+      "tag": "waffen",
+      "display_name": "#waffen",
+      "category": "white_nationalist",
+      "definition": "German for 'weapons' or 'armed'. Used online primarily in reference to the Waffen-SS, the combat arm of the Nazi Schutzstaffel. Accounts with 'waffen' in their username or captions are signalling explicit neo-Nazi affiliation. The term appears in usernames alongside numerical codes (88, 1488) as a compound identifier for neo-Nazi identity.",
+      "origin": "German military terminology. Adopted by neo-Nazi online communities as a shorthand identifier for Waffen-SS affiliation and admiration.",
+      "severity": "high"
+    },
+    {
+      "tag": "blackpilled",
+      "display_name": "#blackpilled",
+      "category": "radicalisation",
+      "definition": "The 'black pill' is a nihilistic ideology originating in incel communities, representing the belief that one's situation (social, romantic, political) is irremediably hopeless. Unlike the 'red pill' (awareness leading to action), the black pill leads to nihilism, despair, and — in documented cases — violence. Content under this tag can function as a pipeline into incel extremism or accelerationist ideology.",
+      "origin": "Derived from the red pill/blue pill metaphor of The Matrix (1999). Adopted by incel communities circa 2016. Distinct from the 'black pill' in philosophy referring to antinatalism.",
+      "severity": "medium"
+    },
+    {
+      "tag": "crusade",
+      "display_name": "#crusade",
+      "category": "white_nationalist",
+      "definition": "In far-right online communities, 'crusade' is co-opted from the medieval Christian military campaigns to construct a narrative of a contemporary religious war between European Christianity and Islam. Content framing present-day events as a 'new crusade' promotes Islamophobic white nationalist ideology while aestheticising historical violence. Distinct from genuine academic discussion of the Crusades.",
+      "origin": "Historical term for the medieval military campaigns (1095–1291). Repurposed by online white nationalists and Islamophobes from approximately 2010 onwards, accelerated by far-right terrorist manifestos explicitly invoking crusader imagery.",
+      "severity": "medium"
+    },
+    {
+      "tag": "europeanidentity",
+      "display_name": "#europeanidentity",
+      "category": "white_nationalist",
+      "definition": "Used by identitarian movements to promote white European ethnic nationalism under the framing of cultural preservation. The term deliberately conflates European cultural heritage with racial identity — a central rhetorical strategy of the identitarian movement. Often appears alongside #greatreplacement content.",
+      "origin": "Popularised by the Identitarian movement (Generation Identity, Austria/France/Germany) from approximately 2012. Adopted on TikTok as a softer entry point to ethnonationalism.",
+      "severity": "medium"
+    },
+    {
+      "tag": "ah",
+      "display_name": "#AH",
+      "category": "white_nationalist",
+      "definition": "Initialism for Adolf Hitler. Used as a hashtag or caption code to identify content as neo-Nazi without triggering keyword moderation. Almost always appears alongside other explicit codes (e.g. #88, #vrilliant) to confirm intent.",
+      "origin": "Emerged on far-right forums and migrated to TikTok as accounts learned to evade automated text-matching moderation. The single-letter abbreviation provides maximum plausible deniability while remaining unambiguous to in-group users.",
+      "severity": "high"
+    },
+    {
+      "tag": "jbw",
+      "display_name": "#JBW",
+      "category": "dehumanisation",
+      "definition": "Acronym for 'Just Be White' — an incel and white nationalist meme asserting that white men have an inherent advantage in dating and social status over men of other ethnicities. Used to promote both racial hierarchy and misogyny simultaneously. Bridges incel ideology with white nationalism.",
+      "origin": "Originated in incel communities on forums such as Lookism.net and r/Braincels circa 2017–2019. Migrated to TikTok through the overlap between incel and far-right aesthetics.",
+      "severity": "high"
+    },
+    {
+      "tag": "evropa",
+      "display_name": "#evropa",
+      "category": "white_nationalist",
+      "definition": "Reference to Identity Evropa (later rebranded as the American Identity Movement), a white nationalist organisation founded in the United States in 2016. The archaic/Slavic spelling 'Evropa' (rather than 'Europa') is used as a subtle identifier, signalling membership or affiliation without using the full organisation name.",
+      "origin": "Identity Evropa founded 2016 by Nathan Damigo. Dissolved 2019 after members were exposed in the Unite the Right Charlottesville rally leak. The #evropa hashtag persists as a community identifier despite the organisation's formal dissolution.",
+      "severity": "high"
+    },
+    {
+      "tag": "rawmilk",
+      "display_name": "#rawmilk",
+      "category": "radicalisation",
+      "definition": "Raw (unpasteurised) milk advocacy functions as a lifestyle entry point within the far-right 'trad' (traditionalist) subculture. Positioned as rejection of government health regulation, pharmaceutical industry, and 'modern degeneracy'. Appears frequently alongside white nationalist and esoteric content as a marker of 'natural' or 'ancestral' living — a soft radicalisation on-ramp.",
+      "origin": "Raw milk advocacy predates the internet but was re-contextualised by the 'trad' and 'dissident right' movement from approximately 2018. On TikTok it functions as a community identity signal for the 'based' lifestyle aesthetic.",
+      "severity": "low"
+    },
+    {
+      "tag": "faustianspirit",
+      "display_name": "#faustianspirit",
+      "category": "white_nationalist",
+      "definition": "Reference to Oswald Spengler's concept of the 'Faustian soul' — his term for the supposed essence of Western European civilisation, characterised by striving, expansion, and domination. Adopted extensively by far-right and white nationalist thinkers as a civilisational framework for white European supremacy. Its appearance in far-right content almost always signals familiarity with Spenglerian or neo-Nietzschean reactionary philosophy.",
+      "origin": "Derived from Spengler's 'The Decline of the West' (1918–1922). Adopted by far-right intellectuals including Julius Evola and subsequently the Alt-Right movement. Appeared on TikTok as part of the 'dissident right reading list' aesthetic from approximately 2021.",
+      "severity": "medium"
+    },
+    {
+      "tag": "nationalist",
+      "display_name": "#nationalist",
+      "category": "white_nationalist",
+      "definition": "Self-applied label used by far-right content creators. While 'nationalist' can describe mainstream civic nationalism, in the context of accounts using #vrilliant, #1488, and related tags, it functions as an explicit white nationalist identifier. The pairing with ironic or esoteric content provides plausible deniability for casual viewers.",
+      "origin": "Standard political term co-opted by white nationalist communities on social media from approximately 2016 onwards.",
+      "severity": "medium"
+    },
+    {
+      "tag": "white",
+      "display_name": "#white",
+      "category": "white_nationalist",
+      "definition": "Standalone use of #white as a content tag — distinct from descriptive use — signals white identity politics when appearing alongside white nationalist community tags (e.g. #vrilliant, #agartha, #JBW). Functions as an identity declaration rather than a descriptive term.",
+      "origin": "Adopted as a hashtag by white identity content creators as a low-friction community marker. Allows accounts to be discovered by the in-group without explicit slurs.",
+      "severity": "medium"
+    },
+    {
+      "tag": "totallyjoyfulday",
+      "display_name": "#totallyjoyfulday",
+      "category": "radicalisation",
+      "definition": "Hashtag used by the account @larpcell_tjd (whose username abbreviates to TJD). Functions as a private in-group identifier rather than a general community tag. The ironically cheerful name serves as cover for far-right content. Part of the pattern of using innocuous or positive-sounding tags to evade moderation while signalling to in-group members.",
+      "origin": "Created by and primarily used within the @larpcell_tjd account ecosystem. The contrast between the cheerful name and the far-right content it tags is deliberate.",
+      "severity": "medium"
+    },
+    {
+      "tag": "conservative",
+      "display_name": "#conservative",
+      "category": "radicalisation",
+      "definition": "Self-applied political label used in this context as an entry-point or cover term for far-right content. On accounts that also use #larpmaxxing, #farright, #hanslanda, and #1488, '#conservative' functions as a soft label for audiences who have not yet adopted more explicit ideology — a pipeline marker rather than a genuine description of mainstream conservatism.",
+      "origin": "Standard political term. Co-opted as a funnel tag in far-right TikTok content from approximately 2020, where it attracts mainstream right-leaning audiences into more radicalised content ecosystems.",
+      "severity": "low"
+    }
+  ],
+  "categories": {
+    "antisemitic": {
+      "label": "Antisemitic",
+      "description": "Content targeting Jewish people through conspiracy theories, coded language, or explicit hatred.",
+      "color": "#1a1a1a"
+    },
+    "white_nationalist": {
+      "label": "White Nationalist / Esoteric",
+      "description": "Content promoting white racial superiority, ethnonationalism, neo-Nazi ideology, or Aryan mysticism.",
+      "color": "#2c2c2c"
+    },
+    "conspiracy": {
+      "label": "Conspiracy / Occult",
+      "description": "Content promoting fringe theories about suppressed history, secret elites, or alternative cosmologies. Often a gateway to more extreme content.",
+      "color": "#555555"
+    },
+    "radicalisation": {
+      "label": "Radicalisation Pipeline",
+      "description": "Tags and content used as entry points or progression markers in the process of online radicalisation.",
+      "color": "#777777"
+    },
+    "dehumanisation": {
+      "label": "Dehumanisation",
+      "description": "Content that strips opponents or out-groups of human qualities.",
+      "color": "#999999"
+    }
+  }
+}

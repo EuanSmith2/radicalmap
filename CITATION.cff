@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: "RadicalMap: Extremist Content Network Mapping Instrument"
+abstract: >-
+  A research instrument for detecting, classifying, and visualising
+  extremist content networks on short-form video platforms, using only
+  publicly accessible metadata. Independent academic research; not
+  affiliated with, commissioned by, or conducted on behalf of any
+  organisation, institution, research body, platform, government agency,
+  or third party.
+authors:
+  - family-names: "Smith"
+    given-names: "Euan"
+    website: "https://euansmith.net"
+repository-code: "https://github.com/EuanSmith2/radicalmap"
+url: "https://euansmith.net/projects/radical-map.md"
+license: MIT
+version: 1.0.0
+date-released: "2026-07-09"
+keywords:
+  - counter-disinformation
+  - OSINT
+  - extremism
+  - network analysis
+  - content moderation
+  - Digital Services Act
+  - coordinated inauthentic behaviour
