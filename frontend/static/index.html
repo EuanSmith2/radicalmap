@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Extremist Content Network — Research Map</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-left">
+        <span class="header-label">RadicalMap · Research Instrument</span>
+        <h1>Extremist Content Network Map</h1>
+      </div>
+      <div class="header-right">
+        <p class="subtitle">Visual analysis of radicalised short-form video content — coded
+        language, cross-platform recruitment signals, and network topology.</p>
+        <p class="ref-stamp">ref. RM-2026/07 &nbsp;·&nbsp; compiled 09.vii.2026 &nbsp;·&nbsp; source: tiktok</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="stats-bar" id="stats-bar">
+    <span class="stat-item"><span class="stat-val" id="s-videos">—</span> videos</span>
+    <span class="stat-sep">/</span>
+    <span class="stat-item"><span class="stat-val" id="s-hashtags">—</span> hashtags</span>
+    <span class="stat-sep">/</span>
+    <span class="stat-item"><span class="stat-val" id="s-comments">—</span> comments</span>
+    <span class="stat-sep">/</span>
+    <span class="stat-item"><span class="stat-val" id="s-links">—</span> external links</span>
+    <span class="stat-sep">/</span>
+    <span class="stat-item flagged-stat"><span class="stat-val" id="s-flagged">—</span> flagged comments</span>
+    <span class="stats-note">hover a node to read it — click to open the file</span>
+  </div>
+
+  <div class="layout">
+
+    <aside class="sidebar">
+      <section class="sidebar-section">
+        <h2>Node types</h2>
+        <div id="legend"></div>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>Filters</h2>
+        <label><input type="checkbox" class="filter" value="hashtag" checked /> Hashtags</label>
+        <label><input type="checkbox" class="filter" value="video" checked /> Videos</label>
+        <label><input type="checkbox" class="filter" value="external_link" checked /> External links</label>
+        <h3>Severity</h3>
+        <label><input type="checkbox" class="severity-filter" value="high" checked /> <span class="sev-key sev-high"></span> High</label>
+        <label><input type="checkbox" class="severity-filter" value="medium" checked /> <span class="sev-key sev-medium"></span> Medium</label>
+        <label><input type="checkbox" class="severity-filter" value="low" checked /> <span class="sev-key sev-low"></span> Low</label>
+        <hr />
+        <label><input type="checkbox" id="filter-flagged" /> Flagged comments only</label>
+      </section>
+
+      <section class="sidebar-section">
+        <h2>Reading the map</h2>
+        <p class="about-text">Ellipses are hashtags — solid fill marks high severity, coloured
+        outline medium, grey outline low. Boxes are videos; a red border means the comment
+        section contains flagged material. Dashed lines are hashtags appearing together on the
+        same post.</p>
+        <p class="about-text footnote">* Collected for academic and counter-disinformation
+        research. Definitions are drawn from Urban Dictionary where a usable community entry
+        exists, otherwise curated — the source is noted on each entry.</p>
+      </section>
+    </aside>
+
+    <main class="graph-area">
+      <div id="network"></div>
+      <div class="graph-controls">
+        <button onclick="network.fit()">Fit view</button>
+        <button onclick="toggleEdges()">Toggle edges</button>
+        <button id="btn-layout" onclick="toggleLayout()">Structured layout</button>
+      </div>
+    </main>
+
+    <aside class="detail-panel" id="detail-panel">
+      <button class="close-btn" onclick="closeDetail()" title="Close">✕</button>
+      <div id="detail-header"></div>
+      <div class="tab-bar" id="tab-bar" style="display:none">
+        <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+        <button class="tab-btn" data-tab="comments" onclick="switchTab('comments')">Comments</button>
+        <button class="tab-btn" data-tab="transcript" onclick="switchTab('transcript')">Transcript</button>
+      </div>
+      <div id="tab-overview" class="tab-content active">
+        <div id="detail-content"><p class="placeholder">Select a node to inspect it.</p></div>
+      </div>
+      <div id="tab-comments" class="tab-content">
+        <div id="comments-content"></div>
+      </div>
+      <div id="tab-transcript" class="tab-content">
+        <div id="transcript-content"></div>
+      </div>
+    </aside>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Source URLs redacted for public release.
+#
+# The development dataset consisted of 18 publicly accessible TikTok videos
+# from a single interconnected content cluster (see README.md -> "The Problem
+# This Addresses" and LEGAL.md for the full description of what was collected,
+# how, and why).
+#
+# Raw source URLs are withheld from this public repository to avoid
+# permanently and publicly linking real, still-active extremist accounts to
+# this project via a citable, indexed research release. This does not affect
+# the classification dictionary, detection methodology, or codebase, all of
+# which are published here in full.
+#
+# Researchers with a legitimate, verifiable research purpose who need the
+# original dataset to reproduce or extend this work may request it via the
+# contact details in README.md.
+#
+# To run this tool against your own dataset, add TikTok video URLs below,
+# one per line:
