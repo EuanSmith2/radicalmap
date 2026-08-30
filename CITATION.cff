@@ -11,6 +11,7 @@ abstract: >-
 authors:
   - family-names: "Smith"
     given-names: "Euan"
+    orcid: "https://orcid.org/0009-0002-3699-9357"
     website: "https://euansmith.net"
 repository-code: "https://github.com/EuanSmith2/radicalmap"
 url: "https://euansmith.net/projects/radical-map.md"
