@@ -46,7 +46,10 @@ def _configure(conn: sqlite3.Connection) -> None:
     conn.execute("PRAGMA foreign_keys = ON")
     conn.execute("PRAGMA busy_timeout = 30000")
     conn.execute("PRAGMA temp_store = MEMORY")
-    conn.execute("PRAGMA cache_size = -64000")      # 64 MB page cache
+    # Page cache, 64 MB by default. Raise RM_CACHE_MB for large imports:
+    # comment indexes keyed on author hash and timestamp take random inserts,
+    # and once they outgrow the cache every insert becomes random page I/O.
+    conn.execute(f"PRAGMA cache_size = {-int(os.environ.get('RM_CACHE_MB', '64')) * 1000}")
     conn.execute("PRAGMA mmap_size = 268435456")    # 256 MB
     conn.execute("PRAGMA foreign_keys = ON")
 

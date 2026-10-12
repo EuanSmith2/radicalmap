@@ -66,6 +66,11 @@ class RobotsCache:
     async def _fetch(self, url: str, host: str) -> RobotsRecord:
         scheme = urlsplit(url).scheme or "https"
         robots_url = f"{scheme}://{host}/robots.txt"
+        # Fetching robots.txt is itself a request to the platform, so it sits
+        # behind the same gate as collection. With the gate closed nothing is
+        # fetched; the adapter refuses the job right after this anyway.
+        if not settings.allow_network:
+            return RobotsRecord(None, None, time.monotonic(), "network disabled")
         try:
             import httpx
             async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:

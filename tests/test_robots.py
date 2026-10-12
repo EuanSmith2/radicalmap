@@ -6,7 +6,7 @@ it gets tested like anything else load-bearing. No network: records are built
 the way a fetch would build them.
 """
 from __future__ import annotations
-import asyncio, sys, time
+import asyncio, os, sys, time
 from pathlib import Path
 from urllib.robotparser import RobotFileParser
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -95,5 +95,10 @@ check("cache record goes stale after its TTL",
       RobotsRecord(None, None, time.monotonic() - 7200, "ok").stale)
 
 print()
+# With the network gate closed, robots.txt is not fetched at all.
+os.environ.pop("RM_ALLOW_NETWORK", None)
+gated = asyncio.run(RobotsCache()._fetch("https://x.test/a", "x.test"))
+check("robots.txt not fetched with the network gate closed", gated.status, "network disabled")
+
 if fails: sys.exit(f"FAILED: {len(fails)} check(s): {fails}")
 print("  all checks passed")
