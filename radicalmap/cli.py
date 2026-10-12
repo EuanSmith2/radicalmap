@@ -149,6 +149,12 @@ def cmd_import(args) -> int:
     return 0
 
 
+def cmd_demo(args) -> int:
+    from . import demo
+    demo.run(Path(args.db) if args.db else None)
+    return 0
+
+
 def cmd_export_apify(args) -> int:
     from .collect.export_apify import export
 
@@ -551,6 +557,10 @@ def main(argv: list[str] | None = None) -> int:
     i.add_argument("--source", default=None)
     i.add_argument("--limit", type=int, default=0)
     i.set_defaults(func=cmd_import)
+
+    dm = sub.add_parser("demo", help="build a synthetic demo database, offline")
+    dm.add_argument("--db", default=None, help="demo database path (default db/radicalmap.demo.db)")
+    dm.set_defaults(func=cmd_demo)
 
     ea = sub.add_parser("export-apify",
                         help="write collected items in the Apify TikTok dataset shape")
