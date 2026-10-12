@@ -14,3 +14,9 @@ browser-cookie3==0.20.1
 
 # Classification
 anthropic==0.116.0
+
+# Learning (linear model, features, active selection)
+numpy==2.5.1
+
+# HTTP for robots.txt and media fetches (imported directly, not only via anthropic)
+httpx==0.28.1

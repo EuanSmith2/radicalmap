@@ -26,7 +26,8 @@ import time
 from ..db import engine
 
 EDGE_TYPES = ("authored", "uses_tag", "uses_sound", "commented_on", "co_tag",
-              "shares_sound", "shares_tag", "same_audio", "links_to", "alt_of")
+              "shares_sound", "shares_tag", "same_audio", "links_to", "alt_of",
+              "mentions")
 
 
 def _replace(edge_type: str, sql: str, params: tuple = ()) -> int:
@@ -164,11 +165,32 @@ def build_links_to() -> int:
          GROUP BY l.source_type, l.source_id, l.normalised_url""")
 
 
+def build_mentions() -> int:
+    """Item -> account it @-mentions, where that account has been collected.
+
+    A mention is a directed, deliberate pointer from one account to another,
+    which makes it a stronger tie than a shared hashtag. Mentions of accounts
+    not yet in the store produce no edge here; the adapter queues those as
+    frontier targets instead, so they become edges once collected.
+    """
+    return _replace("mentions", """
+        INSERT INTO edges (src_type, src_id, dst_type, dst_id, edge_type, weight, observed_count)
+        SELECT 'item', i.id, 'account', a.id, 'mentions', 1.0, 1
+          FROM items i, json_each(i.raw_json, '$.mentions') m
+          JOIN accounts a ON a.platform_id = i.platform_id
+                         AND lower(a.handle) = lower(m.value)
+         WHERE i.raw_json IS NOT NULL AND json_valid(i.raw_json)
+           AND json_type(i.raw_json, '$.mentions') = 'array'
+           AND a.id IS NOT i.account_id
+         GROUP BY i.id, a.id""")
+
+
 def rebuild_all(verbose: bool = True, *, with_audio: bool = True) -> dict[str, int]:
     builders = [("authored", build_authored), ("uses_tag", build_uses_tag),
                 ("uses_sound", build_uses_sound), ("commented_on", build_commented_on),
                 ("co_tag", build_co_tag), ("shares_sound", build_shares_sound),
-                ("shares_tag", build_shares_tag), ("links_to", build_links_to)]
+                ("shares_tag", build_shares_tag), ("links_to", build_links_to),
+                ("mentions", build_mentions)]
     if with_audio:
         builders.append(("same_audio", build_same_audio))
     out = {}

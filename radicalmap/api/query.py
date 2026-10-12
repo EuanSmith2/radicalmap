@@ -325,6 +325,12 @@ def node_edges(node_type: str, node_id: int, limit: int | None = None) -> list[d
 
 
 def communities() -> list[dict]:
+    # Written by network.rebuild() with node_metrics; live aggregate before the
+    # first build.
+    stored = _rows("SELECT community, members, accounts, tags, avg_pagerank, max_bridge "
+                   "FROM community_stats ORDER BY members DESC")
+    if stored:
+        return stored
     return _rows(
         """SELECT community, COUNT(*) AS members,
                   SUM(node_type = 'account') AS accounts,
@@ -336,6 +342,12 @@ def communities() -> list[dict]:
 
 
 def edge_types() -> list[dict]:
+    # Written by network.rebuild() at the end of every graph build. Before the
+    # first build the table is empty, and the live aggregate is cheap anyway.
+    stored = _rows("SELECT edge_type, n, avg_weight, max_weight FROM edge_type_stats "
+                   "ORDER BY n DESC")
+    if stored:
+        return stored
     return _rows(
         """SELECT edge_type, COUNT(*) AS n, ROUND(AVG(weight), 4) AS avg_weight,
                   ROUND(MAX(weight), 4) AS max_weight

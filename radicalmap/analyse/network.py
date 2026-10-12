@@ -102,31 +102,44 @@ class Graph:
         return r / max(r.sum(), 1e-12)
 
     def core_numbers(self) -> np.ndarray:
-        """k-core by repeated peeling of the lowest-degree node."""
-        deg = self.degree().astype(np.int64)
-        core = np.zeros(self.n, dtype=np.int64)
-        alive = np.ones(self.n, dtype=bool)
-        # Adjacency in CSR form for cheap neighbour lookup during peeling.
-        order = np.argsort(self.src, kind="stable")
-        s_sorted, d_sorted = self.src[order], self.dst[order]
-        starts = np.searchsorted(s_sorted, np.arange(self.n))
-        ends = np.searchsorted(s_sorted, np.arange(self.n), side="right")
+        """k-core numbers by bucket peeling (Batagelj & Zaversnik, 2003).
 
-        k = 0
-        remaining = self.n
-        while remaining > 0:
-            live_deg = np.where(alive, deg, np.iinfo(np.int64).max)
-            v = int(np.argmin(live_deg))
-            if live_deg[v] == np.iinfo(np.int64).max:
-                break
-            k = max(k, int(deg[v]))
-            core[v] = k
-            alive[v] = False
-            remaining -= 1
-            for u in d_sorted[starts[v]:ends[v]]:
-                if alive[u] and deg[u] > 0:
-                    deg[u] -= 1
-        return core
+        The first version peeled by scanning every node for the minimum live
+        degree on each step: O(n^2), about 7s at 117k nodes and an estimated
+        11 minutes at a million. Keeping nodes sorted in degree buckets makes
+        each removal O(degree), so the whole pass is O(n + m). Output is
+        identical, including on multigraphs (two edge types between the same
+        pair count twice, as before).
+        """
+        n = self.n
+        if n == 0:
+            return np.zeros(0, dtype=np.int64)
+        deg_arr = self.degree().astype(np.int64)
+        order = np.argsort(self.src, kind="stable")
+        nbrs = self.dst[order].tolist()
+        starts = np.searchsorted(self.src[order], np.arange(n + 1)).tolist()
+        counts = np.bincount(deg_arr, minlength=int(deg_arr.max()) + 1)
+        bin_start = np.concatenate(([0], np.cumsum(counts)[:-1])).tolist()
+        vert = np.argsort(deg_arr, kind="stable").tolist()   # nodes by degree
+        pos = [0] * n
+        for i, v in enumerate(vert):
+            pos[v] = i
+        deg = deg_arr.tolist()
+        for i in range(n):
+            v = vert[i]
+            dv = deg[v]                    # final: v's core number
+            for u in nbrs[starts[v]:starts[v + 1]]:
+                du = deg[u]
+                if du > dv:
+                    # move u to the front of its bucket, then shrink the bucket
+                    pu, pw = pos[u], bin_start[du]
+                    w = vert[pw]
+                    if u != w:
+                        vert[pu], vert[pw] = w, u
+                        pos[u], pos[w] = pw, pu
+                    bin_start[du] += 1
+                    deg[u] = du - 1
+        return np.array(deg, dtype=np.int64)
 
     def communities(self, iters: int = 30, seed: int = 1848) -> np.ndarray:
         """Asynchronous label propagation.
@@ -184,6 +197,27 @@ class Graph:
         return out
 
 
+def _community_rows(nodes, comms: np.ndarray, pr: np.ndarray,
+                    bridge: np.ndarray) -> list[tuple]:
+    """Per-community summary, computed from the arrays already in memory. Same
+    figures the console's communities() used to aggregate from node_metrics:
+    rounded the same way, so the API output does not change."""
+    if comms.size == 0:
+        return []
+    k = int(comms.max()) + 1
+    is_acct = np.fromiter((t == "account" for t, _ in nodes), bool, len(nodes))
+    is_tag = np.fromiter((t == "tag" for t, _ in nodes), bool, len(nodes))
+    members = np.bincount(comms, minlength=k)
+    accts = np.bincount(comms, weights=is_acct, minlength=k)
+    tags = np.bincount(comms, weights=is_tag, minlength=k)
+    pr_sum = np.bincount(comms, weights=pr, minlength=k)
+    max_bridge = np.full(k, -np.inf)
+    np.maximum.at(max_bridge, comms, bridge)
+    return [(c, int(members[c]), int(accts[c]), int(tags[c]),
+             round(float(pr_sum[c] / members[c]), 6), round(float(max_bridge[c]), 4))
+            for c in range(k) if members[c]]
+
+
 def rebuild(verbose: bool = True, **kw) -> dict[str, object]:
     t = time.perf_counter()
     g = Graph(**kw)
@@ -202,6 +236,16 @@ def rebuild(verbose: bool = True, **kw) -> dict[str, object]:
              int(comms[k]), float(bridge[k]))
             for k, (t_, i_) in enumerate(g.nodes)]
     with engine.transaction():
+        engine.execute("DELETE FROM edge_type_stats")
+        engine.execute(
+            """INSERT INTO edge_type_stats (edge_type, n, avg_weight, max_weight)
+               SELECT edge_type, COUNT(*), ROUND(AVG(weight), 4), ROUND(MAX(weight), 4)
+                 FROM edges GROUP BY edge_type""")
+        engine.execute("DELETE FROM community_stats")
+        engine.connect().executemany(
+            """INSERT INTO community_stats (community, members, accounts, tags,
+                                            avg_pagerank, max_bridge)
+               VALUES (?,?,?,?,?,?)""", _community_rows(g.nodes, comms, pr, bridge))
         engine.execute("DELETE FROM node_metrics")
         engine.connect().executemany(
             """INSERT INTO node_metrics (node_type, node_id, degree, weighted_degree,

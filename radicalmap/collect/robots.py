@@ -66,6 +66,11 @@ class RobotsCache:
     async def _fetch(self, url: str, host: str) -> RobotsRecord:
         scheme = urlsplit(url).scheme or "https"
         robots_url = f"{scheme}://{host}/robots.txt"
+        # Fetching robots.txt is itself a request to the platform, so it sits
+        # behind the same gate as collection. With the gate closed nothing is
+        # fetched; the adapter refuses the job right after this anyway.
+        if not settings.allow_network:
+            return RobotsRecord(None, None, time.monotonic(), "network disabled")
         try:
             import httpx
             async with httpx.AsyncClient(timeout=15, follow_redirects=True) as client:
@@ -95,8 +100,11 @@ class RobotsCache:
     def can_fetch(self, rec: RobotsRecord, url: str) -> bool:
         if rec.parser is None:
             return True
-        return rec.parser.can_fetch(settings.user_agent, url) or \
-               rec.parser.can_fetch("*", url)
+        # RobotFileParser already falls back to the "*" group when no group
+        # names this agent. OR-ing in a separate "*" check meant a Disallow
+        # aimed specifically at this crawler was overridden by a permissive
+        # "*" group — the most specific rule must win.
+        return rec.parser.can_fetch(settings.user_agent, url)
 
 
 async def apply(cache: RobotsCache, pacer, url: str) -> tuple[bool, str]:
