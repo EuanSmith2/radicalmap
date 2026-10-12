@@ -18,6 +18,19 @@ def _float(name: str, default: float) -> float:
     return float(os.environ.get(name, default))
 
 
+def _date(name: str, *, end_of_day: bool = False) -> int:
+    """YYYY-MM-DD (UTC) or unix seconds; unset or empty means no bound. An end
+    bound given as a date includes that whole day."""
+    v = (os.environ.get(name) or "").strip()
+    if not v:
+        return 0
+    if v.isdigit():
+        return int(v)
+    from datetime import datetime, timezone
+    ts = int(datetime.strptime(v, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp())
+    return ts + 86399 if end_of_day else ts
+
+
 def _bool(name: str, default: bool) -> bool:
     v = os.environ.get(name)
     return default if v is None else v.strip().lower() in ("1", "true", "yes", "on")
@@ -60,6 +73,30 @@ class Settings:
     expand_tags: bool = _bool("RM_EXPAND_TAGS", True)
     expand_sounds: bool = _bool("RM_EXPAND_SOUNDS", True)
     expand_commenters: bool = _bool("RM_EXPAND_COMMENTERS", False)
+
+    # ── TikTok collection knobs ─────────────────────────────────────────────
+    # The useful subset of what commercial scrapers expose, with conservative
+    # defaults. Sort order (popular/oldest) is deliberately absent: the public
+    # web listings only return platform order, and faking a sort by fetching
+    # everything and reordering would multiply request volume.
+    tt_results_per_listing: int = _int("RM_TT_RESULTS_PER_LISTING", 200)
+    tt_comments_per_post: int = _int("RM_TT_COMMENTS_PER_POST", 500)
+    tt_replies_per_comment: int = _int("RM_TT_REPLIES_PER_COMMENT", 0)
+    # Window on posted_at. Applied at LISTING time where possible — a TikTok id
+    # carries its own timestamp, so out-of-window videos are dropped before a
+    # single request is spent on them.
+    tt_date_from: int = _date("RM_TT_DATE_FROM")
+    tt_date_to: int = _date("RM_TT_DATE_TO", end_of_day=True)
+    tt_exclude_pinned: bool = _bool("RM_TT_EXCLUDE_PINNED", False)
+    tt_want_transcript: bool = _bool("RM_TT_TRANSCRIPTS", True)
+    # Item pages are read from the platform's own embedded JSON first. When a
+    # page arrives without it (an anti-bot interstitial, a markup change), the
+    # adapter can fall back to yt-dlp — which handles those interstitials by
+    # impersonating a browser TLS fingerprint and solving TikTok's JS challenge.
+    # Whether that is acceptable under LEGAL.md is a maintainer decision, so it
+    # is a switch rather than a default buried in code.
+    tt_ytdlp_fallback: bool = _bool("RM_TT_YTDLP_FALLBACK", True)
+    expand_mentions: bool = _bool("RM_EXPAND_MENTIONS", True)
 
     # ── media ────────────────────────────────────────────────────────────────
     audio_dir: Path = Path(os.environ.get("RM_AUDIO_DIR", PROJECT_ROOT / "data" / "audio"))

@@ -70,6 +70,10 @@ def _int(v: Any) -> int | None:
         return None
 
 
+def _flag(v: Any) -> bool | None:
+    return None if v is None or v == "" else bool(v)
+
+
 def read_records(path: Path) -> Iterator[dict[str, Any]]:
     """JSONL, JSON array, or CSV — decided by content, not by extension, since
     corpus files are routinely misnamed."""
@@ -112,18 +116,34 @@ def to_item(record: dict[str, Any], mapping: dict[str, str]) -> ParsedItem | Non
         account = ParsedAccount(
             platform_account_id=str(acct_id or f"handle:{handle}"),
             handle=handle, bio=dig(record, m.get("account_bio")),
-            follower_count=_int(dig(record, m.get("account_followers"))))
+            display_name=dig(record, m.get("account_display_name")),
+            follower_count=_int(dig(record, m.get("account_followers"))),
+            verified=int(bool(dig(record, m.get("account_verified")))),
+            bio_link=dig(record, m.get("account_bio_link")) or None,
+            # Honoured on import too: a corpus someone else collected must not
+            # be a way round the minors rule (persist.py drops these).
+            is_minor=bool(dig(record, m.get("account_is_minor"))))
 
     sound = None
     sid = dig(record, m.get("sound_id"))
     stitle = dig(record, m.get("sound_title"))
     if sid or stitle:
         sound = ParsedSound(platform_sound_id=str(sid or f"import:{stitle}"),
-                            title=stitle, author_name=dig(record, m.get("sound_author")))
+                            title=stitle, author_name=dig(record, m.get("sound_author")),
+                            is_original=int(bool(dig(record, m.get("sound_original")))),
+                            play_url=dig(record, m.get("sound_play_url")) or None)
 
     tags = dig(record, m.get("tags")) or []
     if isinstance(tags, str):
         tags = [t for t in tags.replace(",", " ").split() if t]
+    # Some exports (Apify's among them) give tags as objects, not strings.
+    tags = [dig(t, m.get("tag_name", "name")) if isinstance(t, dict) else t for t in tags]
+    tags = [t for t in tags if t]
+
+    mentions = dig(record, m.get("mentions")) or []
+    if isinstance(mentions, str):
+        mentions = mentions.replace(",", " ").split()
+    mentions = [str(x).lstrip("@") for x in mentions if x]
 
     comments = []
     for c in (dig(record, m.get("comments")) or []):
@@ -137,8 +157,11 @@ def to_item(record: dict[str, Any], mapping: dict[str, str]) -> ParsedItem | Non
                                          if dig(c, m.get("comment_id", "id")) else None),
                     text=str(text),
                     author_handle=dig(c, m.get("comment_author", "author")),
-                    like_count=_int(dig(c, "like_count")),
-                    posted_at=_int(dig(c, "timestamp") or dig(c, "posted_at"))))
+                    like_count=_int(dig(c, m.get("comment_likes", "like_count"))),
+                    posted_at=_int(dig(c, m.get("comment_posted_at", "timestamp"))
+                                   or dig(c, "posted_at")),
+                    parent_platform_comment_id=(str(dig(c, m.get("comment_parent")))
+                                                if dig(c, m.get("comment_parent")) else None)))
 
     return ParsedItem(
         platform_item_id=str(pid),
@@ -149,10 +172,16 @@ def to_item(record: dict[str, Any], mapping: dict[str, str]) -> ParsedItem | Non
         like_count=_int(dig(record, m.get("like_count"))),
         comment_count=_int(dig(record, m.get("comment_count"))),
         share_count=_int(dig(record, m.get("share_count"))),
+        save_count=_int(dig(record, m.get("save_count"))),
+        language=dig(record, m.get("language")) or None,
         account=account, sound=sound,
         tags=[str(t).lstrip("#") for t in tags],
         comments=comments,
         transcript=dig(record, m.get("transcript")),
+        mentions=mentions,
+        is_pinned=_flag(dig(record, m.get("is_pinned"))),
+        is_ad=_flag(dig(record, m.get("is_ad"))),
+        location=dig(record, m.get("location")) or None,
         raw=record,
     )
 

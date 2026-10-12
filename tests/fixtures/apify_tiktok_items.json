@@ -1,0 +1,109 @@
+[
+ {
+  "id": "7400000000000000101",
+  "text": "synthetic one #examplecoded @quietharbor",
+  "createTime": 1720000100,
+  "webVideoUrl": "https://www.tiktok.com/@lanternmoth88/video/7400000000000000101",
+  "textLanguage": "en",
+  "isPinned": false,
+  "isAd": false,
+  "locationCreated": "IE",
+  "authorMeta": {
+   "id": "6900000000000000001",
+   "name": "lanternmoth88",
+   "nickName": "Lantern Moth",
+   "signature": "synthetic bio",
+   "bioLink": "t.me/examplechannel",
+   "verified": false,
+   "fans": 1200,
+   "isUnderAge18": false
+  },
+  "musicMeta": {
+   "musicId": "7300000000000000009",
+   "musicName": "original sound",
+   "musicAuthor": "lanternmoth88",
+   "musicOriginal": true,
+   "playUrl": "https://example.invalid/audio/9.mp3"
+  },
+  "diggCount": 10,
+  "shareCount": 1,
+  "playCount": 100,
+  "commentCount": 2,
+  "collectCount": 3,
+  "hashtags": [
+   {
+    "name": "examplecoded"
+   }
+  ],
+  "mentions": [
+   "@quietharbor"
+  ],
+  "comments": [
+   {
+    "cid": "c1",
+    "text": "synthetic top-level comment",
+    "uniqueId": "commenter_a",
+    "diggCount": 2,
+    "createTime": 1720000200
+   },
+   {
+    "cid": "c2",
+    "text": "synthetic reply t dot me slash examplechannel",
+    "uniqueId": "commenter_b",
+    "createTime": 1720000300,
+    "repliesToId": "c1"
+   }
+  ]
+ },
+ {
+  "id": "7400000000000000102",
+  "text": "synthetic two #examplecoded",
+  "createTime": 1720000400,
+  "webVideoUrl": "https://www.tiktok.com/@quietharbor/video/7400000000000000102",
+  "authorMeta": {
+   "id": "6900000000000000002",
+   "name": "quietharbor",
+   "signature": "",
+   "fans": 50
+  },
+  "musicMeta": {
+   "musicId": "7300000000000000009",
+   "musicName": "original sound",
+   "musicAuthor": "lanternmoth88"
+  },
+  "hashtags": [
+   {
+    "name": "examplecoded"
+   }
+  ],
+  "mentions": [],
+  "comments": []
+ },
+ {
+  "id": "7400000000000000103",
+  "text": "synthetic minor post #examplecoded",
+  "createTime": 1720000500,
+  "webVideoUrl": "https://www.tiktok.com/@smallfry_example/video/7400000000000000103",
+  "authorMeta": {
+   "id": "6900000000000000003",
+   "name": "smallfry_example",
+   "isUnderAge18": true
+  },
+  "musicMeta": {
+   "musicId": "7300000000000000009",
+   "musicName": "original sound"
+  },
+  "hashtags": [
+   {
+    "name": "examplecoded"
+   }
+  ],
+  "comments": [
+   {
+    "cid": "c9",
+    "text": "synthetic comment on a minor's post",
+    "uniqueId": "commenter_c"
+   }
+  ]
+ }
+]

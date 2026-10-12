@@ -135,12 +135,26 @@ def cmd_import(args) -> int:
     from .collect.importers.corpus import import_file
 
     migrate_mod.migrate(verbose=False)
-    mapping = json.loads(Path(args.mapping).read_text()) if args.mapping else {}
+    if args.mapping == "apify":
+        # Built in, so an Apify export imports without hunting for a file.
+        from .collect.adapters.tiktok_web import APIFY_IMPORT_MAPPING
+        mapping = dict(APIFY_IMPORT_MAPPING)
+    else:
+        mapping = json.loads(Path(args.mapping).read_text()) if args.mapping else {}
     totals = import_file(Path(args.path), args.platform, mapping=mapping,
                          source_name=args.source, limit=args.limit)
     print("  imported:")
     for k, v in sorted(totals.items()):
         print(f"    {k:<18} {_fmt(v)}")
+    return 0
+
+
+def cmd_export_apify(args) -> int:
+    from .collect.export_apify import export
+
+    migrate_mod.migrate(verbose=False)
+    n = export(Path(args.out), args.platform, args.limit)
+    print(f"  wrote {_fmt(n)} items in Apify TikTok dataset shape -> {args.out}")
     return 0
 
 
@@ -532,10 +546,18 @@ def main(argv: list[str] | None = None) -> int:
     i = sub.add_parser("import")
     i.add_argument("path")
     i.add_argument("--platform", default="tiktok")
-    i.add_argument("--mapping", default=None)
+    i.add_argument("--mapping", default=None,
+                   help="JSON mapping file, or 'apify' for an Apify TikTok scraper export")
     i.add_argument("--source", default=None)
     i.add_argument("--limit", type=int, default=0)
     i.set_defaults(func=cmd_import)
+
+    ea = sub.add_parser("export-apify",
+                        help="write collected items in the Apify TikTok dataset shape")
+    ea.add_argument("--out", required=True)
+    ea.add_argument("--platform", default="tiktok")
+    ea.add_argument("--limit", type=int, default=0)
+    ea.set_defaults(func=cmd_export_apify)
 
     cl = sub.add_parser("classify")
     cl.add_argument("op", choices=["lexicon", "scan", "adjudicate", "eval", "patterns",
