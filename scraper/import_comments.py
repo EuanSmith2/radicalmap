@@ -46,7 +46,14 @@ def run():
             print(f"  [!] {f.name}: no matching video in DB (tiktok_id={tiktok_id}) — run manual_ingest first")
             continue
 
-        comments = json.loads(f.read_text())
+        try:
+            comments = json.loads(f.read_text())
+        except json.JSONDecodeError:
+            print(f"  [!] {f.name}: invalid JSON, skipping")
+            continue
+        if not isinstance(comments, list):
+            print(f"  [!] {f.name}: expected a list of comment objects, skipping")
+            continue
         flagged = 0
         for c in comments:
             text = c.get("text", "") or ""

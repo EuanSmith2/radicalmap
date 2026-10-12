@@ -1,0 +1,12 @@
+fastapi<1,>=0.115
+uvicorn[standard]<1,>=0.30
+yt-dlp>=2026.1.1
+playwright<2,>=1.45
+browser-cookie3<1,>=0.20
+anthropic<1,>=0.40
+numpy<3,>=2.0
+httpx<1,>=0.27
+
+[dev]
+pytest>=8.0
+ruff>=0.8

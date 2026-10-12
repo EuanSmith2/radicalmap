@@ -1,0 +1,18 @@
+Metadata-Version: 2.4
+Name: radicalmap
+Version: 2.0.0
+Summary: Academic research instrument for mapping extremist content networks
+Requires-Python: >=3.11
+License-File: LICENSE
+Requires-Dist: fastapi<1,>=0.115
+Requires-Dist: uvicorn[standard]<1,>=0.30
+Requires-Dist: yt-dlp>=2026.1.1
+Requires-Dist: playwright<2,>=1.45
+Requires-Dist: browser-cookie3<1,>=0.20
+Requires-Dist: anthropic<1,>=0.40
+Requires-Dist: numpy<3,>=2.0
+Requires-Dist: httpx<1,>=0.27
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: ruff>=0.8; extra == "dev"
+Dynamic: license-file
