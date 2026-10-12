@@ -37,7 +37,7 @@ WEIGHTS = {"source": 0.25, "tie": 0.20, "yield": 0.30, "novelty": 0.15, "drift":
 PRIOR_YIELD = {
     "authored": 0.70, "alt_of": 0.65, "shares_sound": 0.55, "same_audio": 0.60,
     "uses_sound": 0.45, "commented_on": 0.35, "shares_tag": 0.30,
-    "uses_tag": 0.25, "co_tag": 0.20, "links_to": 0.40,
+    "uses_tag": 0.25, "co_tag": 0.20, "links_to": 0.40, "mentions": 0.50,
 }
 SHRINKAGE = 20      # observations before the measured rate fully replaces the prior
 

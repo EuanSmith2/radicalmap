@@ -95,8 +95,11 @@ class RobotsCache:
     def can_fetch(self, rec: RobotsRecord, url: str) -> bool:
         if rec.parser is None:
             return True
-        return rec.parser.can_fetch(settings.user_agent, url) or \
-               rec.parser.can_fetch("*", url)
+        # RobotFileParser already falls back to the "*" group when no group
+        # names this agent. OR-ing in a separate "*" check meant a Disallow
+        # aimed specifically at this crawler was overridden by a permissive
+        # "*" group — the most specific rule must win.
+        return rec.parser.can_fetch(settings.user_agent, url)
 
 
 async def apply(cache: RobotsCache, pacer, url: str) -> tuple[bool, str]:

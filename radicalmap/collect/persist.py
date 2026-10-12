@@ -8,6 +8,7 @@ interrupted ingest left half-written videos behind with no way to tell.
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Iterable
 
 from ..core import identity
@@ -26,11 +27,37 @@ def _link_rows(source_type: str, source_id: int, surface: str, text: str | None)
     } for l in extract_links(text)]
 
 
+def _without_minors(result: CollectResult) -> tuple[CollectResult, int]:
+    """Drop every account the platform flags as under 18, and everything they
+    posted, before a single row is written. Done here rather than per adapter
+    so no collection path (live, import, future platform) can bypass it."""
+    minors = {a.platform_account_id for a in result.accounts if a.is_minor}
+    minors |= {i.account.platform_account_id for i in result.items
+               if i.account and i.account.is_minor}
+    if not minors:
+        return result, 0
+    keep_items = [i for i in result.items
+                  if not (i.account and i.account.platform_account_id in minors)]
+    keep_accounts = [a for a in result.accounts if a.platform_account_id not in minors]
+    return replace(result, items=keep_items, accounts=keep_accounts), len(minors)
+
+
+def _item_raw(i: ParsedItem) -> dict | None:
+    extra = {k: v for k, v in (("mentions", i.mentions or None), ("is_pinned", i.is_pinned),
+                               ("is_ad", i.is_ad), ("location", i.location)) if v is not None}
+    if not extra:
+        return i.raw
+    return {**(i.raw or {}), **extra}
+
+
 def persist(result: CollectResult, platform: str, source_id: int,
             method: str) -> dict[str, int]:
     counts = {k: 0 for k in
               ("items", "accounts", "tags", "comments", "sounds", "links",
-               "transcripts", "stickers")}
+               "transcripts", "stickers", "skipped_minors")}
+    if not result:
+        return counts
+    result, counts["skipped_minors"] = _without_minors(result)
     if not result:
         return counts
 
@@ -49,7 +76,8 @@ def persist(result: CollectResult, platform: str, source_id: int,
                 "handle": a.handle, "display_name": a.display_name, "bio": a.bio,
                 "follower_count": a.follower_count, "following_count": a.following_count,
                 "item_count": a.item_count, "verified": a.verified,
-                "source_id": source_id, "collection_method": method, "raw_json": a.raw,
+                "source_id": source_id, "collection_method": method,
+                "raw_json": ({**(a.raw or {}), "bio_link": a.bio_link} if a.bio_link else a.raw),
             } for a in accounts.values()])
             counts["accounts"] = len(accounts)
         acct_ids = W.account_ids(pid, list(accounts))
@@ -59,6 +87,10 @@ def persist(result: CollectResult, platform: str, source_id: int,
             aid = acct_ids.get(a.platform_account_id)
             if aid and a.bio:
                 counts["links"] += W.insert_links(_link_rows("account", aid, "bio", a.bio))
+            # Link-in-bio is a structured field, stored as the bio surface so it
+            # joins the same links_to edges as a URL written into the bio text.
+            if aid and a.bio_link:
+                counts["links"] += W.insert_links(_link_rows("account", aid, "bio", a.bio_link))
 
         if not result.items:
             return counts
@@ -73,7 +105,7 @@ def persist(result: CollectResult, platform: str, source_id: int,
             "view_count": i.view_count, "like_count": i.like_count,
             "comment_count": i.comment_count, "share_count": i.share_count,
             "save_count": i.save_count, "source_id": source_id,
-            "collection_method": method, "raw_json": i.raw,
+            "collection_method": method, "raw_json": _item_raw(i),
         } for i in result.items])
         counts["items"] = len(result.items)
         ids = W.item_ids(pid, [i.platform_item_id for i in result.items])
@@ -102,7 +134,8 @@ def persist(result: CollectResult, platform: str, source_id: int,
                 "platform_id": pid, "platform_sound_id": s.platform_sound_id,
                 "title": s.title, "author_name": s.author_name,
                 "duration_s": s.duration_s, "is_original": s.is_original,
-                "use_count": s.use_count, "source_id": source_id, "raw_json": s.raw,
+                "use_count": s.use_count, "source_id": source_id,
+                "raw_json": ({**(s.raw or {}), "play_url": s.play_url} if s.play_url else s.raw),
             } for s in sounds.values()])
             W.link_item_sounds([
                 (ids[i.platform_item_id], sound_ids[i.sound.platform_sound_id])
@@ -147,12 +180,21 @@ def persist(result: CollectResult, platform: str, source_id: int,
                 for r in engine.query(
                     f"SELECT id, item_id, platform_comment_id FROM comments "
                     f"WHERE item_id IN ({marks})", item_id_list)}
+        parents = []
         for i in result.items:
             iid = ids.get(i.platform_item_id)
             for n, c in enumerate(i.comments):
                 cid = comment_ids.get((iid, c.platform_comment_id or f"idx:{n}"))
                 if cid:
                     link_rows += _link_rows("comment", cid, "comment", c.text)
+                    pid_ = comment_ids.get((iid, c.parent_platform_comment_id))
+                    if c.parent_platform_comment_id and pid_:
+                        parents.append((pid_, cid))
+        # Replies keep their thread: a reply is often the recruitment step
+        # ("dm me", a link) answering an innocuous top-level comment.
+        if parents:
+            engine.connect().executemany(
+                "UPDATE comments SET parent_comment_id = ? WHERE id = ?", parents)
 
         if link_rows:
             counts["links"] += W.insert_links(link_rows)

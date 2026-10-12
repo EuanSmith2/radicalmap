@@ -50,6 +50,17 @@ Disallow: /
 check("does not borrow Googlebot's permissions",
       cache.can_fetch(rec(GREEDY), "https://x.test/anything"), False)
 
+# A group naming THIS crawler outranks a permissive "*" group. can_fetch used to
+# OR the two, so a site that singled us out and said no was crawled anyway.
+SPECIFIC = """User-agent: RadicalMapResearchBot
+Disallow: /
+
+User-agent: *
+Disallow:
+"""
+check("a Disallow aimed at us beats a permissive *",
+      cache.can_fetch(rec(SPECIFIC), "https://x.test/anything"), False)
+
 # An unreachable robots.txt is not permission.
 unreachable = RobotsRecord(None, None, time.monotonic(), "unreachable: timeout")
 check("unreachable robots.txt yields no crawl-delay", unreachable.crawl_delay, None)

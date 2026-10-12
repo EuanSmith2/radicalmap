@@ -305,12 +305,18 @@ class TikTokBrowserAdapter:
                     "(geo-block, network failure, or markup change)")
             return CollectResult(notes=f"{kind}: listing returned 0 items for {target!r}")
 
+        from .tiktok import posted_at_from_id
+        from .tiktok_web import in_window
         seen: set[str] = set()
         targets: list[Target] = []
         for vid, handle in captured:
             if vid in seen:
                 continue
             seen.add(vid)
+            # Same window as the yt-dlp listings: the id dates the video, so an
+            # out-of-window one is dropped before it costs a fetch.
+            if not in_window(posted_at_from_id(vid), settings.tt_date_from, settings.tt_date_to):
+                continue
             targets.append(Target("item", item_url(vid, handle), depth=depth + 1))
             if len(targets) >= self.max_targets:
                 break

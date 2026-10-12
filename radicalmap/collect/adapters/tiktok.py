@@ -33,6 +33,7 @@ import unicodedata
 from typing import Any
 
 from ...core.config import settings
+from . import tiktok_web as web
 from .base import (Adapter, AdapterError, CollectResult, ParsedAccount, ParsedComment,
                    ParsedItem, ParsedSound, PermanentError, Target)
 
@@ -72,14 +73,23 @@ class TikTokAdapter:
     JOB_TYPES = {"item", "account_timeline", "tag_page", "sound_page", "account"}
 
     def __init__(self, *, binary: str = "yt-dlp", timeout: float | None = None,
-                 want_comments: bool = True, want_transcript: bool = True,
-                 max_comments: int = 500, page_limit: int = 200) -> None:
+                 want_comments: bool = True, want_transcript: bool | None = None,
+                 max_comments: int | None = None, max_replies: int | None = None,
+                 page_limit: int | None = None, fetch_text=None, fetch_json=None) -> None:
         self.binary = binary
         self.timeout = timeout or settings.request_timeout
         self.want_comments = want_comments
-        self.want_transcript = want_transcript
-        self.max_comments = max_comments
-        self.page_limit = page_limit
+        self.want_transcript = (settings.tt_want_transcript if want_transcript is None
+                                else want_transcript)
+        self.max_comments = (settings.tt_comments_per_post if max_comments is None
+                             else max_comments)
+        self.max_replies = (settings.tt_replies_per_comment if max_replies is None
+                            else max_replies)
+        self.page_limit = page_limit or settings.tt_results_per_listing
+        # Injectable transports so the whole web path runs offline in tests.
+        self._robots = None
+        self._fetch_text = fetch_text or self._http_text
+        self._fetch_json = fetch_json or self._http_json
 
     def handles(self, job_type: str) -> bool:
         return job_type in self.JOB_TYPES
@@ -202,7 +212,10 @@ class TikTokAdapter:
             except json.JSONDecodeError:
                 continue
             vid = str(entry.get("id") or "")
-            if vid.isdigit():
+            # The id carries its own timestamp, so the date window is applied
+            # here, before any request is spent on an out-of-window video.
+            if vid.isdigit() and web.in_window(posted_at_from_id(vid),
+                                               settings.tt_date_from, settings.tt_date_to):
                 out.append(Target("item", item_url(vid, entry.get("uploader")),
                                   depth=depth + 1))
         return out
@@ -228,16 +241,20 @@ class TikTokAdapter:
         kind, target, depth = job["job_type"], job["target"], job.get("depth", 0)
 
         if kind == "item":
-            args = ["--dump-single-json", "--skip-download"]
-            if self.want_comments:
-                args += ["--write-comments",
-                         "--extractor-args", f"tiktok:max_comments={self.max_comments}"]
-            info = json.loads(await self._ytdlp([*args, target]))
-            item = self.parse_video(info)
-            if self.want_transcript:
-                item.transcript = await self._transcript(info)
-            return CollectResult(items=[item],
-                                 discovered=self._expand(item, depth))
+            item = await self._item_web(target)
+            if item is None:
+                if not settings.tt_ytdlp_fallback:
+                    raise AdapterError(
+                        "item page carried no embedded data and RM_TT_YTDLP_FALLBACK is off")
+                item = await self._item_ytdlp(target)
+            if not web.in_window(item.posted_at, settings.tt_date_from, settings.tt_date_to):
+                return CollectResult(notes=f"outside date window: {item.platform_item_id}")
+            if settings.tt_exclude_pinned and item.is_pinned:
+                return CollectResult(notes=f"pinned post excluded: {item.platform_item_id}")
+            if item.account and item.account.is_minor:
+                # Never stored (persist.py), and never expanded from either.
+                return CollectResult(items=[item], notes="account flagged under 18")
+            return CollectResult(items=[item], discovered=self._expand(item, depth))
 
         if kind in ("account_timeline", "tag_page", "sound_page"):
             out = await self._ytdlp([
@@ -248,6 +265,13 @@ class TikTokAdapter:
                                  notes=f"{len(found)} items from {kind}")
 
         if kind == "account":
+            html = await self._fetch_text(target)
+            info = web.user_detail(web.rehydration(html))
+            if info is not None:
+                return CollectResult(accounts=[web.parse_user_detail(info)])
+            if not settings.tt_ytdlp_fallback:
+                raise AdapterError(
+                    "profile page carried no embedded data and RM_TT_YTDLP_FALLBACK is off")
             info = json.loads(await self._ytdlp(
                 ["--dump-single-json", "--flat-playlist", "--playlist-end", "1", target]))
             handle = info.get("uploader") or info.get("channel") or target.rsplit("@", 1)[-1]
@@ -259,6 +283,112 @@ class TikTokAdapter:
                 item_count=info.get("playlist_count"))])
 
         raise PermanentError(f"tiktok adapter cannot handle job_type {kind!r}")
+
+    # ── web transport ────────────────────────────────────────────────────────
+
+    def _gate(self) -> None:
+        if not settings.allow_network:
+            raise PermanentError(
+                "network disabled — set RM_ALLOW_NETWORK=1 to permit live collection")
+
+    async def _http_text(self, url: str) -> str:
+        self._gate()
+        # The worker checks robots.txt for the job's URL; a job's sub-requests
+        # (comment pages under /api/, caption files) are checked here, so no
+        # request this adapter makes is exempt.
+        if settings.respect_robots:
+            if self._robots is None:
+                from ..robots import RobotsCache
+                self._robots = RobotsCache()
+            if not self._robots.can_fetch(await self._robots.get(url), url):
+                raise PermanentError(f"robots.txt disallows {url[:120]}")
+        import httpx
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout, follow_redirects=True) as client:
+                r = await client.get(url, headers={"User-Agent": settings.user_agent})
+        except httpx.HTTPError as exc:
+            raise AdapterError(f"fetch failed: {exc}"[:300]) from exc
+        if r.status_code == 429:
+            raise AdapterError("rate limited: 429")
+        if r.status_code in (404, 410):
+            raise PermanentError(f"HTTP {r.status_code} for {url}")
+        if r.status_code >= 400:
+            raise AdapterError(f"HTTP {r.status_code} for {url}")
+        return r.text
+
+    async def _http_json(self, url: str) -> Any:
+        text = await self._http_text(url)
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError as exc:
+            # An HTML interstitial where JSON was expected is a block, not data.
+            raise AdapterError(f"non-JSON response from {url[:120]}") from exc
+
+    async def _pause(self) -> None:
+        """Spacing between the sub-requests of one job (comment pages). The
+        worker's pacer meters jobs; this keeps a single job with forty comment
+        pages from being forty back-to-back requests."""
+        if settings.requests_per_second > 0:
+            await asyncio.sleep(1.0 / settings.requests_per_second)
+
+    async def _item_web(self, url: str) -> ParsedItem | None:
+        """Item from the page's embedded JSON, or None if the page has none."""
+        html = await self._fetch_text(url)
+        struct = web.item_struct(web.rehydration(html))
+        if struct is None:
+            return None
+        item = web.parse_item_struct(struct)
+        if item.account and item.account.is_minor:
+            return item
+        if self.want_comments and self.max_comments > 0:
+            item.comments = await self._comments_web(item.platform_item_id)
+        if self.want_transcript:
+            sub, lang = web.subtitle_url(struct)
+            if sub:
+                try:
+                    item.transcript = vtt_to_text(await self._fetch_text(sub)) or None
+                    item.transcript_language = lang
+                except (AdapterError, PermanentError):
+                    item.transcript = None   # a missing caption track never fails the item
+        return item
+
+    async def _comments_web(self, item_id: str) -> list[ParsedComment]:
+        out: list[ParsedComment] = []
+        cursor, more = 0, True
+        while more and len(out) < self.max_comments:
+            page, cursor, more = web.parse_comment_page(
+                await self._fetch_json(web.comment_list_url(item_id, cursor)))
+            if not page:
+                break
+            for c in page:
+                out.append(c)
+                if self.max_replies > 0 and (c.reply_count or 0) > 0 and c.platform_comment_id:
+                    out += await self._replies_web(item_id, c.platform_comment_id)
+            if more:
+                await self._pause()
+        return out[: self.max_comments]
+
+    async def _replies_web(self, item_id: str, comment_id: str) -> list[ParsedComment]:
+        out: list[ParsedComment] = []
+        cursor, more = 0, True
+        while more and len(out) < self.max_replies:
+            await self._pause()
+            page, cursor, more = web.parse_comment_page(
+                await self._fetch_json(web.reply_list_url(item_id, comment_id, cursor)),
+                parent=comment_id)
+            if not page:
+                break
+            out += page
+        return out[: self.max_replies]
+
+    async def _item_ytdlp(self, target: str) -> ParsedItem:
+        """Fallback path. NB: yt-dlp 2026.07.04 has no TikTok comment
+        extraction, so items collected this way carry no comments."""
+        info = json.loads(await self._ytdlp(["--dump-single-json", "--skip-download", target]))
+        item = self.parse_video(info)
+        if self.want_transcript:
+            item.transcript = await self._transcript(info)
+        return item
 
     async def _transcript(self, info: dict[str, Any]) -> str | None:
         """Auto-captions come back as a URL, not text. v1's transcripts table has
@@ -292,6 +422,12 @@ class TikTokAdapter:
             for tag in item.tags[:8]:
                 out.append(Target("tag_page", f"https://www.tiktok.com/tag/{tag}",
                                   depth=depth + 1, priority=120))
+        # A mention is a deliberate pointer at another account, and often the
+        # only route to an account that shares neither a tag nor a sound.
+        if settings.expand_mentions:
+            for handle in item.mentions[:8]:
+                out.append(Target("account_timeline", f"https://www.tiktok.com/@{handle}",
+                                  depth=depth + 1, priority=92))
         # A sound page is often the better expansion: unlike a hashtag, a sound
         # cannot be swapped out to evade detection without re-editing the video.
         if settings.expand_sounds and item.sound and not item.sound.platform_sound_id.startswith("tt:"):
