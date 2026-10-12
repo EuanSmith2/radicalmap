@@ -134,18 +134,20 @@ This writes a Frictionless Data Package: one CSV per table with sha256 hashes, p
 
 ## Performance
 
-Measured with `scripts/bench_scale.py` on a synthetic corpus (Apple Silicon laptop, Python 3.11). Queries are the median of 5 warm runs. The 1M run used 80k accounts, 30k tags and 60k sounds.
+Measured with `scripts/bench_scale.py` on a synthetic corpus (Apple Silicon laptop, Python 3.11, `RM_CACHE_MB=1024` for the 1M run). Queries are the median of 5 warm runs. The 1M corpus has 80k accounts, 30k tags and 60k sounds.
 
 | | 100k items, 1M comments | 1M items, 10M comments |
 |---|---|---|
-| Build the store | 38 s, 526 MB | 28 min, 4.8 GB |
-| Slowest console API call | 35 ms (`communities()`) | not measured |
-| Derived metrics rebuild | 2.3 s | 74 s |
-| Network edges, all types except `shares_tag` | 7 s | 301 s |
-| Network metrics (PageRank, k-core, communities) | 35 s | not measured |
+| Build the store | 38 s, 526 MB | 20 min, 4.8 GB |
+| Derived metrics rebuild | 2.3 s | 59 s |
+| Network edges, all types except `shares_tag` | 7 s | 119 s |
+| Network metrics (PageRank, k-core, communities) | 35 s | 7.3 min |
+| Slowest console call | 35 ms | 254 ms (caption search, see below) |
 | `shares_tag` edges | 640 s, 17.3M edges | not run (see below) |
 
-Most of the 1M build time is loading 10M comments. Per comment it is about 5x slower than at 100k, because the comment indexes outgrow SQLite's page cache. Set `RM_CACHE_MB` higher for large imports.
+Most of the 1M build is loading 10M comments, and per comment it costs about 3.5x what it does at 100k, because the comment indexes outgrow SQLite's page cache. Raise `RM_CACHE_MB` for large imports.
+
+`communities()` took 782 ms in that run. It now reads a summary written by each graph build, like `edge_types()`, and was not re-measured at 1M. The 254 ms caption search is a worst case: the synthetic captions draw on 27 words, so the search term matches about 40% of all items. Community detection (label propagation, a Python loop per node) is most of the network-metrics time at 1M.
 
 `shares_tag` is the known scaling problem. It links every pair of accounts that share a tag, so a tag used by *r* accounts produces r²/2 edges, and the uniform synthetic corpus is close to worst case. Capping very common tags or keeping each account's strongest ties would fix it, but either changes the network the method produces, so it is an open methodology decision rather than a silent optimisation.
 

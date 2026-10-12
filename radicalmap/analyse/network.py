@@ -197,6 +197,27 @@ class Graph:
         return out
 
 
+def _community_rows(nodes, comms: np.ndarray, pr: np.ndarray,
+                    bridge: np.ndarray) -> list[tuple]:
+    """Per-community summary, computed from the arrays already in memory. Same
+    figures the console's communities() used to aggregate from node_metrics:
+    rounded the same way, so the API output does not change."""
+    if comms.size == 0:
+        return []
+    k = int(comms.max()) + 1
+    is_acct = np.fromiter((t == "account" for t, _ in nodes), bool, len(nodes))
+    is_tag = np.fromiter((t == "tag" for t, _ in nodes), bool, len(nodes))
+    members = np.bincount(comms, minlength=k)
+    accts = np.bincount(comms, weights=is_acct, minlength=k)
+    tags = np.bincount(comms, weights=is_tag, minlength=k)
+    pr_sum = np.bincount(comms, weights=pr, minlength=k)
+    max_bridge = np.full(k, -np.inf)
+    np.maximum.at(max_bridge, comms, bridge)
+    return [(c, int(members[c]), int(accts[c]), int(tags[c]),
+             round(float(pr_sum[c] / members[c]), 6), round(float(max_bridge[c]), 4))
+            for c in range(k) if members[c]]
+
+
 def rebuild(verbose: bool = True, **kw) -> dict[str, object]:
     t = time.perf_counter()
     g = Graph(**kw)
@@ -220,6 +241,11 @@ def rebuild(verbose: bool = True, **kw) -> dict[str, object]:
             """INSERT INTO edge_type_stats (edge_type, n, avg_weight, max_weight)
                SELECT edge_type, COUNT(*), ROUND(AVG(weight), 4), ROUND(MAX(weight), 4)
                  FROM edges GROUP BY edge_type""")
+        engine.execute("DELETE FROM community_stats")
+        engine.connect().executemany(
+            """INSERT INTO community_stats (community, members, accounts, tags,
+                                            avg_pagerank, max_bridge)
+               VALUES (?,?,?,?,?,?)""", _community_rows(g.nodes, comms, pr, bridge))
         engine.execute("DELETE FROM node_metrics")
         engine.connect().executemany(
             """INSERT INTO node_metrics (node_type, node_id, degree, weighted_degree,

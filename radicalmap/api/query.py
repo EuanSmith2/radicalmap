@@ -325,6 +325,12 @@ def node_edges(node_type: str, node_id: int, limit: int | None = None) -> list[d
 
 
 def communities() -> list[dict]:
+    # Written by network.rebuild() with node_metrics; live aggregate before the
+    # first build.
+    stored = _rows("SELECT community, members, accounts, tags, avg_pagerank, max_bridge "
+                   "FROM community_stats ORDER BY members DESC")
+    if stored:
+        return stored
     return _rows(
         """SELECT community, COUNT(*) AS members,
                   SUM(node_type = 'account') AS accounts,
