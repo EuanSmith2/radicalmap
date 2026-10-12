@@ -59,6 +59,7 @@ Migrations in `radicalmap/db/schema/` are append-only. The runner stores a hash 
 | 006_network | edges, node_metrics, edge_yield, propagation_events, saturation_samples, account_clusters |
 | 007_propagation_audit | rebuilds propagation_events with a wider decision set |
 | 008_mentions | case-insensitive handle index for the mentions edge |
+| 009_network_summaries | edge_type_stats and community_stats, written by each graph build so the Network tab doesn't aggregate on every request |
 
 Two tables need care. `author_identities` is the only place a commenter's handle sits next to its hash; `identity.drop_identities()` empties it before anything leaves the machine. The salt that keys the hashes lives in a file outside the database, so a copied `.db` alone can't reverse them.
 

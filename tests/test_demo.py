@@ -53,5 +53,15 @@ check("edge_types() served from the build's stored summary",
       engine.scalar("SELECT COUNT(*) FROM edge_type_stats") > 0, True)
 check("stored summary matches a live count", {r["edge_type"]: r["n"] for r in Q.edge_types()}, live)
 
+live_c = {r["community"]: dict(r) for r in engine.query(
+    """SELECT community, COUNT(*) AS members, SUM(node_type = 'account') AS accounts,
+              SUM(node_type = 'tag') AS tags, ROUND(AVG(pagerank), 6) AS avg_pagerank,
+              ROUND(MAX(bridge_score), 4) AS max_bridge
+         FROM node_metrics WHERE community IS NOT NULL GROUP BY community""")}
+check("communities() served from the stored summary",
+      engine.scalar("SELECT COUNT(*) FROM community_stats") > 0, True)
+check("stored community summary matches a live aggregate",
+      {r["community"]: r for r in Q.communities()}, live_c)
+
 if fails: sys.exit(f"FAILED: {len(fails)} check(s): {fails}")
 print("\n  all checks passed")
