@@ -46,5 +46,12 @@ check("@-mention forms a tie", out["edges"].get("mentions", 0) > 0)
 check("obfuscated link + link-in-bio form links_to", out["edges"].get("links_to", 0) > 0)
 check("more than one community", (out["network"].get("communities") or 0) > 1)
 
+from radicalmap.api import query as Q
+live = {r["edge_type"]: r["n"] for r in engine.query(
+    "SELECT edge_type, COUNT(*) AS n FROM edges GROUP BY edge_type")}
+check("edge_types() served from the build's stored summary",
+      engine.scalar("SELECT COUNT(*) FROM edge_type_stats") > 0, True)
+check("stored summary matches a live count", {r["edge_type"]: r["n"] for r in Q.edge_types()}, live)
+
 if fails: sys.exit(f"FAILED: {len(fails)} check(s): {fails}")
 print("\n  all checks passed")

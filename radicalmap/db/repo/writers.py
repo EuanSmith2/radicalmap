@@ -97,16 +97,30 @@ def upsert_accounts(records: Iterable[Mapping[str, Any]]) -> int:
     return len(rows)
 
 
+# SQLite caps bound parameters per statement (32,766 in current builds, 999 in
+# builds before 3.32). One placeholder per key meant any lookup over that many
+# keys raised "too many SQL variables" — a 1M-item benchmark with 80k accounts
+# hit it on the first lookup. Keys are looked up in chunks safely under both.
+_IN_CHUNK = 900
+
+
+def _lookup(sql: str, key: str, fixed: tuple, keys: Sequence[Any]) -> dict[Any, int]:
+    """Run `sql` (with one `{marks}` slot) over `keys` in chunks; return key -> id."""
+    out: dict[Any, int] = {}
+    keys = list(keys)
+    for i in range(0, len(keys), _IN_CHUNK):
+        chunk = keys[i:i + _IN_CHUNK]
+        for r in engine.query(sql.format(marks=",".join("?" * len(chunk))), (*fixed, *chunk)):
+            out[r[key]] = int(r["id"])
+    return out
+
+
 def account_ids(platform: int, platform_account_ids: Sequence[str]) -> dict[str, int]:
     if not platform_account_ids:
         return {}
-    marks = ",".join("?" * len(platform_account_ids))
-    rows = engine.query(
-        f"SELECT id, platform_account_id FROM accounts WHERE platform_id = ? "
-        f"AND platform_account_id IN ({marks})",
-        (platform, *platform_account_ids),
-    )
-    return {r["platform_account_id"]: int(r["id"]) for r in rows}
+    return _lookup("SELECT id, platform_account_id FROM accounts WHERE platform_id = ? "
+                   "AND platform_account_id IN ({marks})",
+                   "platform_account_id", (platform,), platform_account_ids)
 
 
 # ─── items ───────────────────────────────────────────────────────────────────
@@ -171,13 +185,9 @@ def upsert_items(records: Iterable[Mapping[str, Any]]) -> int:
 def item_ids(platform: int, platform_item_ids: Sequence[str]) -> dict[str, int]:
     if not platform_item_ids:
         return {}
-    marks = ",".join("?" * len(platform_item_ids))
-    rows = engine.query(
-        f"SELECT id, platform_item_id FROM items WHERE platform_id = ? "
-        f"AND platform_item_id IN ({marks})",
-        (platform, *platform_item_ids),
-    )
-    return {r["platform_item_id"]: int(r["id"]) for r in rows}
+    return _lookup("SELECT id, platform_item_id FROM items WHERE platform_id = ? "
+                   "AND platform_item_id IN ({marks})",
+                   "platform_item_id", (platform,), platform_item_ids)
 
 
 # ─── tags ────────────────────────────────────────────────────────────────────
@@ -194,10 +204,8 @@ def upsert_tags(tags: Iterable[str]) -> dict[str, int]:
         "INSERT OR IGNORE INTO tags (tag, normalised, display_name) VALUES (?,?,?)",
         [(orig, n, f"#{orig}") for n, orig in norm.items()],
     )
-    marks = ",".join("?" * len(norm))
-    rows = engine.query(
-        f"SELECT id, normalised FROM tags WHERE normalised IN ({marks})", tuple(norm))
-    return {r["normalised"]: int(r["id"]) for r in rows}
+    return _lookup("SELECT id, normalised FROM tags WHERE normalised IN ({marks})",
+                   "normalised", (), list(norm))
 
 
 def link_item_tags(pairs: Iterable[tuple[int, int]]) -> int:
@@ -239,12 +247,15 @@ def upsert_sounds(records: Iterable[Mapping[str, Any]]) -> dict[str, int]:
     if not rows:
         return {}
     engine.connect().executemany(SOUND_SQL, rows)
-    ids = [r["platform_sound_id"] for r in rows]
-    marks = ",".join("?" * len(ids))
-    found = engine.query(
-        f"SELECT id, platform_sound_id FROM sounds WHERE platform_id = ? "
-        f"AND platform_sound_id IN ({marks})", (rows[0]["platform_id"], *ids))
-    return {r["platform_sound_id"]: int(r["id"]) for r in found}
+    by_platform: dict[int, list[str]] = {}
+    for r in rows:
+        by_platform.setdefault(r["platform_id"], []).append(r["platform_sound_id"])
+    out: dict[str, int] = {}
+    for platform, ids in by_platform.items():
+        out.update(_lookup("SELECT id, platform_sound_id FROM sounds WHERE platform_id = ? "
+                           "AND platform_sound_id IN ({marks})",
+                           "platform_sound_id", (platform,), ids))
+    return out
 
 
 def link_item_sounds(pairs: Iterable[tuple[int, int]]) -> int:
