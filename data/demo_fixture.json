@@ -1,0 +1,53 @@
+{
+  "dataset": "radicalmap-offline-demo-v1",
+  "description": "Synthetic, non-personal fixture for offline testing and onboarding.",
+  "videos": [
+    {
+      "url": "https://example.invalid/video/alpha",
+      "tiktok_id": "demo_alpha",
+      "username": "research_demo_alpha",
+      "bio": "Synthetic account for reproducibility demo.",
+      "caption": "Synthetic sample about digital literacy and moderation tooling #safetydemo #civicresearch",
+      "view_count": 120,
+      "like_count": 20,
+      "comment_count": 2,
+      "share_count": 3,
+      "hashtags": ["safetydemo", "civicresearch"],
+      "comments": [
+        {
+          "author": "user_alpha_1",
+          "text": "Useful synthetic sample",
+          "like_count": 1,
+          "timestamp": 1700000001
+        },
+        {
+          "author": "user_alpha_2",
+          "text": "Thanks for publishing reproducible research tooling",
+          "like_count": 0,
+          "timestamp": 1700000002
+        }
+      ],
+      "transcript": "This is a synthetic transcript used only for reproducible offline demonstration."
+    },
+    {
+      "url": "https://example.invalid/video/beta",
+      "tiktok_id": "demo_beta",
+      "username": "research_demo_beta",
+      "bio": "Synthetic account for graph connectivity tests.",
+      "caption": "Another synthetic post showing shared hashtags #safetydemo #networkmapping",
+      "view_count": 85,
+      "like_count": 14,
+      "comment_count": 1,
+      "share_count": 1,
+      "hashtags": ["safetydemo", "networkmapping"],
+      "comments": [
+        {
+          "author": "user_beta_1",
+          "text": "Synthetic fixture comment",
+          "like_count": 2,
+          "timestamp": 1700000100
+        }
+      ]
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 from analysis.graph_builder import build_graph
@@ -13,6 +13,7 @@ from db.database import get_video_comments, get_video_transcript
 app = FastAPI(title="Radical Network Map")
 STATIC = Path(__file__).parent / "static"
 VIDEO_DIR = Path(__file__).parent.parent / "data" / "videos"
+VIDEO_DIR.mkdir(parents=True, exist_ok=True)
 
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 app.mount("/videos", StaticFiles(directory=VIDEO_DIR), name="videos")
