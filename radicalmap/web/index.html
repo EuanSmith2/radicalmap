@@ -1,0 +1,155 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RadicalMap console</title>
+<link rel="stylesheet" href="/static/app.css">
+<div id="app">
+  <header class="bar">
+    <div class="brand"><b>RadicalMap</b><span>v2 console</span></div>
+    <nav class="tabs" id="tabs"></nav>
+    <div class="bar-right">
+      <span id="dbpath">—</span>
+      <span><kbd>?</kbd> help</span>
+    </div>
+  </header>
+
+  <!-- dashboard -->
+  <main id="view-dash">
+    <div class="split"><div class="list-pane">
+      <div class="cards" id="dash-cards"></div>
+      <div class="dash-cols" id="dash-cols"></div>
+    </div></div>
+    <div class="status"><span id="dash-status">—</span></div>
+  </main>
+
+  <!-- explorer -->
+  <main id="view-items">
+    <div class="filters">
+      <label>search</label>
+      <input id="f-item-q" class="wide" placeholder="FTS over caption/title/description">
+      <label><input type="checkbox" id="f-item-findings"> findings only</label>
+      <span class="spacer"></span>
+      <span class="pager"><button data-page="items" data-dir="-1">◀ prev</button>
+      <span id="p-items" class="dim">—</span>
+      <button data-page="items" data-dir="1">next ▶</button></span>
+    </div>
+    <div class="split">
+      <div class="list-pane" id="items-list"></div>
+      <div class="detail-pane" id="items-detail"><div class="empty">Select a row.</div></div>
+    </div>
+    <div class="status"><span id="items-status">—</span></div>
+  </main>
+
+  <!-- findings -->
+  <main id="view-cls">
+    <div class="filters" id="cls-filters">
+      <label>stage</label><select id="f-cls-stage"></select>
+      <label>verdict</label><select id="f-cls-verdict"></select>
+      <label>target</label><select id="f-cls-target"></select>
+      <label>domain</label><select id="f-cls-domain"></select>
+      <label><input type="checkbox" id="f-cls-findings"> findings only</label>
+      <span class="spacer"></span>
+      <span class="pager"><button data-page="cls" data-dir="-1">◀ prev</button>
+      <span id="p-cls" class="dim">—</span>
+      <button data-page="cls" data-dir="1">next ▶</button></span>
+    </div>
+    <div class="split">
+      <div class="list-pane" id="cls-list"></div>
+      <div class="detail-pane" id="cls-detail"><div class="empty">Select a row.</div></div>
+    </div>
+    <div class="status"><span id="cls-status">—</span></div>
+  </main>
+
+  <!-- network -->
+  <main id="view-net">
+    <div class="filters">
+      <label>type</label><select id="f-net-type"></select>
+      <label>community</label><select id="f-net-comm"></select>
+      <span class="spacer"></span>
+      <span class="pager"><button data-page="net" data-dir="-1">◀ prev</button>
+      <span id="p-net" class="dim">—</span>
+      <button data-page="net" data-dir="1">next ▶</button></span>
+    </div>
+    <div class="split">
+      <div class="list-pane" id="net-list"></div>
+      <div class="detail-pane" id="net-detail"><div class="empty">Select a node.</div></div>
+    </div>
+    <div class="status"><span id="net-status">—</span></div>
+  </main>
+
+  <!-- lexicon -->
+  <main id="view-lex">
+    <div class="filters">
+      <label>tier</label><select id="f-lex-tier"></select>
+      <label>find</label><input id="f-lex-q" placeholder="pattern / slug / definition">
+      <span class="spacer"></span>
+      <span class="pager"><button data-page="lex" data-dir="-1">◀ prev</button>
+      <span id="p-lex" class="dim">—</span>
+      <button data-page="lex" data-dir="1">next ▶</button></span>
+    </div>
+    <div class="split">
+      <div class="list-pane" id="lex-list"></div>
+      <div class="detail-pane" id="lex-detail"><div class="empty">Select an entry.</div></div>
+    </div>
+    <div class="status"><span id="lex-status">—</span></div>
+  </main>
+
+  <!-- queue -->
+  <main id="view-queue">
+    <div class="filters">
+      <label>view</label>
+      <select id="f-queue-view">
+        <option value="jobs">fetch jobs</option>
+        <option value="prop">propagation events</option>
+      </select>
+      <label>status</label><select id="f-queue-status"></select>
+      <span class="spacer"></span>
+      <span class="pager"><button data-page="queue" data-dir="-1">◀ prev</button>
+      <span id="p-queue" class="dim">—</span>
+      <button data-page="queue" data-dir="1">next ▶</button></span>
+    </div>
+    <div class="split"><div class="list-pane" id="queue-list"></div></div>
+    <div class="status"><span id="queue-status">—</span></div>
+  </main>
+
+  <!-- annotate -->
+  <main id="view-ann">
+    <div class="filters">
+      <label>annotator</label><input id="f-ann-who" placeholder="your name" style="min-width:120px">
+      <label>sample</label><input id="f-ann-n" type="number" value="50" min="1" max="500" style="min-width:64px">
+      <label>seed</label><input id="f-ann-seed" type="number" value="1848" style="min-width:74px">
+      <button id="ann-draw">draw sample</button>
+      <span class="spacer"></span>
+      <span id="ann-progress" class="dim">—</span>
+    </div>
+    <div class="ann-wrap" id="ann-wrap"><div class="empty">
+      Enter your name and draw a sample to begin.<br><br>
+      The gold set is the only thing every precision and recall figure depends on,<br>
+      and it cannot be produced by the model being measured.
+    </div></div>
+    <div class="status"><span id="ann-status">—</span></div>
+  </main>
+</div>
+
+<div id="help"><div class="box">
+  <h3 class="sec">Keyboard</h3>
+  <table>
+    <tr><td><kbd>1</kbd>–<kbd>7</kbd></td><td>switch tab</td></tr>
+    <tr><td><kbd>j</kbd> / <kbd>k</kbd></td><td>next / previous row</td></tr>
+    <tr><td><kbd>g</kbd> / <kbd>G</kbd></td><td>first / last row</td></tr>
+    <tr><td><kbd>[</kbd> / <kbd>]</kbd></td><td>previous / next page</td></tr>
+    <tr><td><kbd>/</kbd></td><td>focus the filter box</td></tr>
+    <tr><td><kbd>r</kbd></td><td>reload the current view</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>close help / leave a field</td></tr>
+  </table>
+  <h3 class="sec">Annotate tab</h3>
+  <table>
+    <tr><td><kbd>1</kbd>…<kbd>9</kbd></td><td>pick the highlighted axis option</td></tr>
+    <tr><td><kbd>Tab</kbd></td><td>next axis</td></tr>
+    <tr><td><kbd>Enter</kbd></td><td>save and advance</td></tr>
+    <tr><td><kbd>s</kbd></td><td>skip this row</td></tr>
+  </table>
+  <p style="color:var(--fg-faint)">Press <kbd>?</kbd> or <kbd>Esc</kbd> to close.</p>
+</div></div>
+<div class="toast" id="toast"></div>
+<script src="/static/app.js"></script>

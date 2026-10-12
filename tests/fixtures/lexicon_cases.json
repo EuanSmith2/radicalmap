@@ -1,0 +1,179 @@
+{
+  "_note": "Constructed test sentences for the lexicon's behaviour. These are NOT corpus annotations — they are unit tests, written to lock in specific properties. The hard_negative block is the important one: it encodes the v1 failures this redesign exists to fix. Every v1 behaviour asserted here was verified by running v1's own scraper/flag_patterns.flag_comment().",
+  "must_be_candidate": [
+    {
+      "text": "1488 brothers",
+      "why": "unambiguous numeric code"
+    },
+    {
+      "text": "sik haj lads",
+      "why": "Swedish phonetic Sieg Heil — moderation evasion"
+    },
+    {
+      "text": "the holohoax never happened",
+      "why": "Holocaust denial"
+    },
+    {
+      "text": "day of the rope is coming",
+      "why": "accelerationist incitement"
+    },
+    {
+      "text": "RWDS when",
+      "why": "right wing death squads"
+    },
+    {
+      "text": "have you started noticing yet",
+      "why": "coded antisemitism"
+    },
+    {
+      "text": "the great replacement is real, remigration now",
+      "why": "two tier-B"
+    },
+    {
+      "text": "check the early life section",
+      "why": "wiki dog whistle"
+    },
+    {
+      "text": "StreSS test",
+      "why": "hidden SS in mixed case"
+    },
+    {
+      "text": "clown world honk honk",
+      "why": "on-ramp motif"
+    },
+    {
+      "text": "stoppa folkutbytet",
+      "why": "Swedish replacement slogan"
+    },
+    {
+      "text": "patria, sangre",
+      "why": "Spanish falangist"
+    },
+    {
+      "text": "third account, banned at 40k",
+      "why": "ban evasion"
+    },
+    {
+      "text": "based, link in bio, deleting this later",
+      "why": "three tier-C combine"
+    },
+    {
+      "text": "they always knew, wake up, iykyk",
+      "why": "multiple tier-C"
+    }
+  ],
+  "hard_negative": [
+    {
+      "text": "I am a jew",
+      "v1_actual": "antisemitic / high",
+      "why": "Self-description. v1's \\bjew\\b matches the bare singular token, so a Jewish person describing themselves is recorded as high-severity antisemitism."
+    },
+    {
+      "text": "the jew next door lent me a ladder",
+      "v1_actual": "antisemitic / high",
+      "why": "Ordinary neighbourly description using the singular noun."
+    },
+    {
+      "text": "soros funded my scholarship",
+      "v1_actual": "antisemitic / high",
+      "why": "Factual reference to a real foundation's funding."
+    },
+    {
+      "text": "the rothschild banking family in the 1800s",
+      "v1_actual": "antisemitic / high",
+      "why": "Ordinary economic history."
+    },
+    {
+      "text": "my jewish grandmother survived the camps",
+      "v1_actual": "not flagged",
+      "why": "v1 misses this — \\bjew\\b does not match 'jewish'. Included to keep the comparison honest: v1's pattern is narrower than 'any mention', and the write-up must not overstate it."
+    },
+    {
+      "text": "reading about the great replacement conspiracy for my dissertation",
+      "v1_actual": "conspiracy / high",
+      "why": "Scholarship names the theory it studies."
+    },
+    {
+      "text": "the aryan languages of the Indo-Iranian branch",
+      "v1_actual": "white_nationalist / medium",
+      "why": "Established linguistic term."
+    },
+    {
+      "text": "black sun photography at the eclipse",
+      "v1_actual": "white_nationalist / medium",
+      "why": "Ordinary astronomy and photography."
+    },
+    {
+      "text": "globalist trade policy hurt manufacturing towns",
+      "v1_actual": "conspiracy / low",
+      "why": "Ordinary political argument, uncoded."
+    },
+    {
+      "text": "watched Agartha, the sci-fi one, hollow earth stuff is fun",
+      "v1_actual": "esoteric / medium",
+      "why": "Fiction and occult interest, not politics."
+    },
+    {
+      "text": "jan 6 hearings were on the news again",
+      "v1_actual": "radicalisation / low",
+      "why": "Neutral news reference."
+    },
+    {
+      "text": "blackpill honestly, my team will never win the league",
+      "v1_actual": "dehumanisation / medium",
+      "why": "Fatalistic slang in a sporting context."
+    }
+  ],
+  "must_not_be_candidate": [
+    {
+      "text": "this recipe is based",
+      "why": "single tier-C, mainstream slang"
+    },
+    {
+      "text": "link in bio for the tutorial",
+      "why": "single tier-C, ordinary promotion"
+    },
+    {
+      "text": "wake up early for the gym",
+      "why": "single tier-C, literal meaning"
+    },
+    {
+      "text": "lovely sunset over the harbour",
+      "why": "nothing at all"
+    },
+    {
+      "text": "my telegram is in the description",
+      "why": "single tier-C, ordinary"
+    },
+    {
+      "text": "PhD applications open in MySpace era fonts",
+      "why": "mixed case must not trip hidden-code detection"
+    }
+  ],
+  "must_never_be_tier_a": [
+    {
+      "text": "jews",
+      "why": "a neutral demonym can never be a high-confidence finding"
+    },
+    {
+      "text": "jewish people",
+      "why": "same"
+    },
+    {
+      "text": "globalist",
+      "why": "ordinary political vocabulary"
+    },
+    {
+      "text": "noticing",
+      "why": "an ordinary English word"
+    },
+    {
+      "text": "based",
+      "why": "mainstream slang"
+    },
+    {
+      "text": "88",
+      "why": "a bare number is usually a birth year"
+    }
+  ]
+}

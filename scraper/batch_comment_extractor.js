@@ -11,25 +11,10 @@
  */
 
 (async function batchExtract() {
+  // [videoId, username] pairs. Fill in locally from your own collection list;
+  // real account handles are never committed to this repository.
   const VIDEOS = [
-    ["7653385075140218144", "sansilyevhgu"],
-    ["7615406924032478477", "sunshinenationalist"],
-    ["7626364834073824525", "tebawdc.v2"],
-    ["7651174176870386974", "_urban271"],
-    ["7655002278159600918", "vrilmasterofswitzerland"],
-    ["7649738918950145303", "jokerwaffen"],
-    ["7581340897657277704", "larping_as_esoteric"],
-    ["7639438173470297375", "larpcell_tjd"],
-    ["7637195375882865951", "vrilliantpostn"],
-    ["7657337344978078990", "sir_vril"],
-    ["7623842767520812321", "vrilliantgoyv4"],
-    ["7658228690622418207", "foidwaffle"],
-    ["7640941744011382038", "european.national8"],
-    ["7638551519159176481", "tarrelkanon"],
-    ["7648340034478804237", "lordofvril1488"],
-    ["7653161334049099030", "volvolover911"],
-    ["7623600640832392478", "based.pabs.mx"],
-    ["7648688880396340510", "lordofvril1488_2"],
+    // ["7000000000000000000", "example_user"],
   ];
 
   const MAX_PAGES = 20;   // ~1000 comments max per video
