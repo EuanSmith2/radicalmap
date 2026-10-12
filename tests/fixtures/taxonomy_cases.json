@@ -1,0 +1,533 @@
+{
+ "_note": "Constructed evaluation cases for the three-axis taxonomy and the learning loop. These are WRITTEN TEST SENTENCES, not annotations of the real corpus, and are always recorded with annotator='fixture' so they can never be mistaken for gold. Their job is to prove the machinery and to check that domain and harm stay separable — particularly that left-wing political theory scans as a domain with no harm.",
+ "cases": [
+  {
+   "text": "1488 forever brothers",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "sieg heil lads, the day is coming",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "heil hitler, always",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "the 14 words are all that matter",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "blood and soil, nothing else",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "remove kebab, simple as",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "total enemy death is the only way",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "day of the rope when",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "RWDS cannot come soon enough",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "gas them all",
+   "domain": "neo_nazi",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "the great replacement is happening right now and they know it",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "remigration is the only answer for europe",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "kalergi plan in action, wake up",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "white genocide is real and deliberate",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "they are replacing us on purpose",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "defend europe from this invasion",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "europe is ours, take it back",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "anti-white policies everywhere you look",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "our people are being erased",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "demographic replacement is a fact not a theory",
+   "domain": "ethnonationalist",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "check the early life section, you will notice",
+   "domain": "antisemitic_conspiracy",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "they always kept it in plain sight",
+   "domain": "antisemitic_conspiracy",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "funny hats run the banks",
+   "domain": "antisemitic_conspiracy",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "the rothschilds engineered all of it",
+   "domain": "antisemitic_conspiracy",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "soros funds every single one of these groups",
+   "domain": "antisemitic_conspiracy",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "noticing a pattern yet lads",
+   "domain": "antisemitic_conspiracy",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "ZOG controls the media entirely",
+   "domain": "antisemitic_conspiracy",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "the chosen ones again",
+   "domain": "antisemitic_conspiracy",
+   "harm_type": "conspiracy_targeting_group",
+   "stance": "promoting"
+  },
+  {
+   "text": "dialectical materialism explains the whole conjuncture",
+   "domain": "marxist_leninist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "reading state and revolution again this week",
+   "domain": "marxist_leninist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "the vanguard party question is still unresolved",
+   "domain": "marxist_leninist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "democratic centralism is misunderstood by most critics",
+   "domain": "marxist_leninist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "marxist-leninist analysis of the housing crisis",
+   "domain": "marxist_leninist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "class consciousness is the precondition for anything else",
+   "domain": "marxist_leninist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "surplus value is the core of the whole argument",
+   "domain": "marxist_leninist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "seize the means of production, that is the demand",
+   "domain": "marxist_leninist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "protracted people's war as a strategic concept",
+   "domain": "maoist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "the mass line is about learning from the masses",
+   "domain": "maoist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "studying the cultural revolution this semester",
+   "domain": "maoist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "mao zedong thought on contradiction is worth reading",
+   "domain": "maoist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "gonzalo thought is a minority position even among maoists",
+   "domain": "maoist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "maoist analysis of the peasantry differs from the orthodox view",
+   "domain": "maoist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "mutual aid networks kept this estate fed all winter",
+   "domain": "insurrectionary_anarchist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "anarcho-syndicalism has a long history here",
+   "domain": "insurrectionary_anarchist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "black bloc tactics are debated within the movement",
+   "domain": "insurrectionary_anarchist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "acab is a slogan not a programme",
+   "domain": "insurrectionary_anarchist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "abolish the prisons, build something better",
+   "domain": "insurrectionary_anarchist",
+   "harm_type": "none",
+   "stance": "promoting"
+  },
+  {
+   "text": "only through armed struggle will anything change, initiate the people's war",
+   "domain": "maoist",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "armed struggle is the only road left to us",
+   "domain": "maoist",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "initiate the people's war now, no more waiting",
+   "domain": "maoist",
+   "harm_type": "incitement_to_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "first against the wall when the revolution comes",
+   "domain": "accelerationist_lw",
+   "harm_type": "glorification_of_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "bring out the guillotine for every landlord",
+   "domain": "accelerationist_lw",
+   "harm_type": "glorification_of_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "kill all landlords, no exceptions",
+   "domain": "accelerationist_lw",
+   "harm_type": "glorification_of_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "when the guillotines return they deserve it",
+   "domain": "accelerationist_lw",
+   "harm_type": "glorification_of_violence",
+   "stance": "promoting"
+  },
+  {
+   "text": "baqiyah wa tatamadad, remaining and expanding",
+   "domain": "jihadist",
+   "harm_type": "terrorist_org_support",
+   "stance": "promoting"
+  },
+  {
+   "text": "amaq agency confirms the operation",
+   "domain": "jihadist",
+   "harm_type": "terrorist_org_support",
+   "stance": "promoting"
+  },
+  {
+   "text": "al-hayat media released it this morning",
+   "domain": "jihadist",
+   "harm_type": "terrorist_org_support",
+   "stance": "promoting"
+  },
+  {
+   "text": "hypergamy explains everything about female nature",
+   "domain": "manosphere_incel",
+   "harm_type": "identity_denigration",
+   "stance": "promoting"
+  },
+  {
+   "text": "all women are like that, awalt",
+   "domain": "manosphere_incel",
+   "harm_type": "identity_denigration",
+   "stance": "promoting"
+  },
+  {
+   "text": "she hit the wall and now she wants commitment",
+   "domain": "manosphere_incel",
+   "harm_type": "identity_denigration",
+   "stance": "promoting"
+  },
+  {
+   "text": "blackpilled on the smv crash",
+   "domain": "manosphere_incel",
+   "harm_type": "identity_denigration",
+   "stance": "promoting"
+  },
+  {
+   "text": "the great replacement is a debunked conspiracy theory with a body count",
+   "domain": "ethnonationalist",
+   "harm_type": "none",
+   "stance": "countering"
+  },
+  {
+   "text": "people pushing remigration should say what they actually mean: deportation",
+   "domain": "ethnonationalist",
+   "harm_type": "none",
+   "stance": "countering"
+  },
+  {
+   "text": "calling out the 1488 accounts in these replies",
+   "domain": "ethnonationalist",
+   "harm_type": "none",
+   "stance": "countering"
+  },
+  {
+   "text": "this 'noticing' stuff is just antisemitism with extra steps",
+   "domain": "ethnonationalist",
+   "harm_type": "none",
+   "stance": "countering"
+  },
+  {
+   "text": "reported three accounts posting sieg heil today",
+   "domain": "ethnonationalist",
+   "harm_type": "none",
+   "stance": "countering"
+  },
+  {
+   "text": "court heard the defendant had posted day of the rope material",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "reporting"
+  },
+  {
+   "text": "europol's report covers left-wing and anarchist terrorism separately",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "reporting"
+  },
+  {
+   "text": "researchers traced the kalergi meme back to a 2017 forum post",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "reporting"
+  },
+  {
+   "text": "the inquiry published its findings on radicalisation pathways",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "reporting"
+  },
+  {
+   "text": "the budget does nothing for renters",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "voting green this time",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "local council planning decisions are a disgrace",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "tax policy needs reform",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "i disagree with the coalition on housing",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "turnout was low again",
+   "domain": "mainstream_political",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "lovely sunset over the harbour tonight",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "this recipe is genuinely based",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "my dog learned a new trick",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "watching the match with friends",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "new phone who dis",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "the weather has been incredible",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "finally finished that book",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "cooking dinner, link in bio for the recipe",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "great gig last night",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "training for a half marathon",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "coffee shop on the corner is excellent",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  },
+  {
+   "text": "booked flights for september",
+   "domain": "none",
+   "harm_type": "none",
+   "stance": "discussing"
+  }
+ ]
+}

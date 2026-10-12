@@ -21,3 +21,15 @@ data/fable_results.json
 *.log
 *.tmp
 scratchpad/
+
+# v2 store — same rule as v1: scraped personal data, local only
+db/radicalmap.v2.db
+db/radicalmap.v2.db-wal
+db/radicalmap.v2.db-shm
+
+# Pseudonymisation key. Deliberately NOT in the database: a leaked .db file
+# must not be sufficient to reverse commenter hashes.
+db/.author_salt
+
+# Deduplicated sound files — copyrighted third-party audio, local analysis only
+data/audio/

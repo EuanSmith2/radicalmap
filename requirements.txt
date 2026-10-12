@@ -1,4 +1,16 @@
-fastapi
-uvicorn[standard]
-yt-dlp
-anthropic
+# Pinned. The v1 file listed four packages with no versions and omitted two that
+# the scraper imports (playwright, browser_cookie3), so `pip install -r
+# requirements.txt` produced an install where half the collection code raised
+# ImportError on first run.
+
+# API + serving
+fastapi==0.139.0
+uvicorn[standard]==0.51.0
+
+# Collection
+yt-dlp==2026.7.4
+playwright==1.61.0
+browser-cookie3==0.20.1
+
+# Classification
+anthropic==0.116.0
