@@ -1,0 +1,2 @@
+[console_scripts]
+radicalmap = radicalmap.cli:main

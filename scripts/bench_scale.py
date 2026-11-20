@@ -84,6 +84,10 @@ with stage(f"items ({N_ITEMS:,})") as s_items:
                 "comment_count": rng.randint(0, 5_000), "share_count": rng.randint(0, 50_000),
                 "save_count": rng.randint(0, 20_000),
                 "source_id": src, "collection_method": "bench",
+                # ~5% of items @-mention another account, in the shape
+                # persist() writes, so the mentions edge build is exercised.
+                "raw_json": ({"mentions": [f"User{rng.randrange(N_ACCOUNTS)}"]}
+                             if rng.random() < 0.05 else None),
             } for i in range(start, min(start + BATCH, N_ITEMS))])
 item_ids = [r["id"] for r in engine.query("SELECT id FROM items")]
 
@@ -214,6 +218,66 @@ for label, sql, params in PRECOMPUTED:
     med = measure(sql, params)
     pre_worst = max(pre_worst, med)
     print(f"    {label:<40} {med:8.2f} ms   {plan_verdict(sql, params)}")
+
+# ── network edges (the analyse phase's other half) ──────────────────────────
+from radicalmap.propagate import edges
+# BENCH_EDGES: "all" (default), "none", or a comma list of builder names.
+# shares_tag is O(sum of reach^2) over tags and dominates at scale (17M edges,
+# ~640s at 100k items on the uniform synthetic corpus), so large runs can
+# measure everything else without waiting hours on it.
+which = os.environ.get("BENCH_EDGES", "all")
+print(f"\n  rebuilding network edges (no audio; BENCH_EDGES={which})")
+t = time.perf_counter()
+if which == "all":
+    edges.rebuild_all(verbose=True, with_audio=False)
+elif which != "none":
+    for name in which.split(","):
+        t1 = time.perf_counter()
+        n = getattr(edges, f"build_{name.strip()}")()
+        print(f"    {name.strip():<14} {n:>9,} edges  {time.perf_counter()-t1:6.2f}s")
+print(f"    total {time.perf_counter() - t:.1f}s")
+plan = [r["detail"] for r in engine.query(
+    "EXPLAIN QUERY PLAN SELECT i.id, a.id FROM items i, json_each(i.raw_json, '$.mentions') m "
+    "JOIN accounts a ON a.platform_id = i.platform_id AND lower(a.handle) = lower(m.value) "
+    "WHERE i.raw_json IS NOT NULL")]
+print("    mentions join plan: " + " | ".join(plan))
+
+# ── the console's own query functions, as the API calls them ────────────────
+# The SQL list above approximates the UI; these are the real calls behind each
+# tab, timed against the full store including edges.
+from radicalmap.api import query as Q
+from radicalmap.analyse import network as _net
+t = time.perf_counter()
+_net_out = _net.rebuild(verbose=False)
+print(f"\n  network metrics (pagerank, k-core, communities, bridges): "
+      f"{_net_out.get('nodes', 0):,} nodes in {time.perf_counter() - t:.1f}s")
+some_item = item_ids[len(item_ids) // 2]
+some_tag = engine.scalar("SELECT tag_id FROM item_tags LIMIT 1")
+CONSOLE = [
+    ("Dashboard: overview()", lambda: Q.overview()),
+    ("Explorer: items() default page", lambda: Q.items()),
+    ("Explorer: items(q='replacement')", lambda: Q.items(q="replacement")),
+    ("Explorer: items(tag=...)", lambda: Q.items(tag=some_tag)),
+    ("Item: item_detail()", lambda: Q.item_detail(some_item)),
+    ("Findings: classifications()", lambda: Q.classifications()),
+    ("Network: nodes()", lambda: Q.nodes()),
+    ("Network: communities()", lambda: Q.communities()),
+    ("Network: edge_types()", lambda: Q.edge_types()),
+]
+def time_call(fn, reps=5):
+    fn()
+    ts = []
+    for _ in range(reps):
+        t = time.perf_counter(); fn(); ts.append(time.perf_counter() - t)
+    return sorted(ts)[reps // 2] * 1000
+print("\n  console API calls (median of 5)")
+console_worst = 0.0
+for label, fn in CONSOLE:
+    med = time_call(fn)
+    console_worst = max(console_worst, med)
+    print(f"   {'!' if med > 100 else ' '}{label:<40} {med:8.2f} ms")
+print(f"  worst console call: {console_worst:.1f} ms "
+      f"({'PASS' if console_worst < 100 else 'FAIL'} — target <100ms)")
 
 live = next(m for l, m in [(l, measure(s, p)) for l, s, p in QUERIES]
             if "co-occurrence" in l)

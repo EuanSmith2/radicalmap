@@ -36,6 +36,14 @@ class ParsedAccount:
     following_count: int | None = None
     item_count: int | None = None
     verified: int = 0
+    # The profile's link-in-bio. Separate from `bio` because it is a structured
+    # field on the platform, not text, and it is where off-platform recruitment
+    # destinations usually sit.
+    bio_link: str | None = None
+    # Set only when the platform itself flags the account as under 18. Such
+    # accounts are never persisted (see persist.py); the flag exists so the
+    # skip can be counted rather than silently happening.
+    is_minor: bool = False
     raw: dict[str, Any] | None = None
 
 
@@ -47,6 +55,8 @@ class ParsedSound:
     duration_s: float | None = None
     is_original: int = 0
     use_count: int | None = None
+    # Where the audio can be fetched. Only collect/audio.py ever downloads it.
+    play_url: str | None = None
     raw: dict[str, Any] | None = None
 
 
@@ -93,6 +103,11 @@ class ParsedItem:
     stickers: list[ParsedSticker] = field(default_factory=list)
     transcript: str | None = None
     transcript_language: str = "en"
+    # Handles @-mentioned in the caption, as the platform tagged them.
+    mentions: list[str] = field(default_factory=list)
+    is_pinned: bool | None = None
+    is_ad: bool | None = None
+    location: str | None = None
     raw: dict[str, Any] | None = None
 
 

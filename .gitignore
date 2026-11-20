@@ -33,3 +33,8 @@ db/.author_salt
 
 # Deduplicated sound files — copyrighted third-party audio, local analysis only
 data/audio/
+
+# Demo database (radicalmap demo) — synthetic, regenerated on every run
+db/radicalmap.demo.db
+db/radicalmap.demo.db-wal
+db/radicalmap.demo.db-shm
